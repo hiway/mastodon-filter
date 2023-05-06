@@ -47,6 +47,8 @@ Create an access-token for your account by visiting:
 
 ```
 $ mastodon-filter config
+Instance URL [https://mastodon.social]: https://mastodon.sharma.io
+Access token []: PASTE-YOUR-ACCESS-TOKEN-HERE
 ```
 
 #### List filter titles and keyword counts

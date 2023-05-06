@@ -79,6 +79,8 @@ class MastodonFilters:
         for i, keyword in enumerate(keywords):
             if not keyword:
                 continue
+            if keyword.startswith("#"):
+                continue
             params[f"keywords_attributes[{i}][keyword]"] = keyword
             params[f"keywords_attributes[{i}][whole_word]"] = True
         return params

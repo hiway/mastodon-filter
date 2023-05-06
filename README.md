@@ -47,16 +47,22 @@ $ mastodon-filter list
 $ mastodon-filter show TITLE
 ```
 
-#### Backup filter keywords
+#### Share / backup filter keywords
 
 ```
 $ mastodon-filter show TITLE > WORDLIST-FILE
 ```
 
-#### Create a filter
+#### Create a filter from a wordlist
 
 ```
 $ mastodon-filter create TITLE WORDLIST-FILE
+```
+
+#### Create a filter from terminal input
+
+```
+$ mastodon-filter create TITLE -
 ```
 
 #### Delete a filter

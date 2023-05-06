@@ -8,12 +8,10 @@ Manage keyword filters on Mastodon from command-line.
 ### Try it out
 
 ```
-$ python3.10 -m pip install pipx
+$ python3 -m pip install pipx
 $ pipx install git+https://github.com/hiway/mastodon-filter.git
 $ mastodon-filter --help
 ```
-
-
 
 ### Development
 
@@ -70,4 +68,3 @@ $ mastodon-filter create TITLE -
 ```
 $ mastodon-filter delete TITLE
 ```
-

@@ -29,6 +29,22 @@ $ mastodon-filter --help
 
 #### Configure authentication
 
+You will be asked to provide instance URL and oAuth access-token.
+
+Instance URL will be of the form:
+
+- https://mastodon.social
+- https://mastodon.sharma.io
+
+Create an access-token for your account by visiting:
+
+- https://INSTANCE-DOMAIN/settings/applications
+- Click on "New Application"
+- Provide a name (example: "mastodon-filter")
+- Check read:filters
+- Check write:filters
+- Copy "Your access token" to clipboard
+
 ```
 $ mastodon-filter config
 ```

@@ -1,4 +1,5 @@
 import requests
+from typing import Optional
 
 from mastodon_filter.config import Config
 
@@ -28,35 +29,13 @@ class MastodonFilters:
             params[f"keywords_attributes[{i}][whole_word]"] = True
         return params
 
-    def _get(self, path: str) -> dict:
+    def _call_api(self, method: str, path: str, params: Optional[dict] = None) -> dict:
         """
-        Make a GET request.
+        Call API method.
         """
-        response = requests.get(
-            f"{self.config.api_base_url}{path}",
-            headers={"Authorization": f"Bearer {self.config.access_token}"},
-        )
-        response.raise_for_status()
-        return response.json()
-
-    def _post(self, path: str, params: dict) -> dict:
-        """
-        Make a POST request.
-        """
-        response = requests.post(
-            f"{self.config.api_base_url}{path}",
-            headers={"Authorization": f"Bearer {self.config.access_token}"},
-            params=params,
-        )
-        response.raise_for_status()
-        return response.json()
-
-    def _delete(self, path: str, params: dict) -> dict:
-        """
-        Make a DELETE request.
-        """
-        response = requests.delete(
-            f"{self.config.api_base_url}{path}",
+        response = requests.request(
+            method=method,
+            url=f"{self.config.api_base_url}{path}",
             headers={"Authorization": f"Bearer {self.config.access_token}"},
             params=params,
         )
@@ -67,7 +46,7 @@ class MastodonFilters:
         """
         Get filters.
         """
-        return self._get("/api/v2/filters")
+        return self._call_api("get", "/api/v2/filters")
 
     def filter(self, title: str) -> dict:
         """
@@ -125,7 +104,7 @@ class MastodonFilters:
             "filter_action": action,
         }
         params.update(self._keyword_params(keywords))
-        return self._post("/api/v2/filters", params)
+        return self._call_api("post", "/api/v2/filters", params)
 
     def delete(self, title: str) -> dict:
         """
@@ -134,4 +113,4 @@ class MastodonFilters:
         if not title:
             raise ValueError("Title must not be empty.")
         filter_item = self.filter(title)
-        return self._delete(f"/api/v2/filters/{filter_item['id']}", {})
+        return self._call_api("delete", f"/api/v2/filters/{filter_item['id']}")

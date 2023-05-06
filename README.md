@@ -41,9 +41,9 @@ Create an access-token for your account by visiting:
 - https://INSTANCE-DOMAIN/settings/applications
 - Click on "New Application"
 - Provide a name (example: "mastodon-filter")
-- Check read:filters
-- Check write:filters
-- Copy "Your access token" to clipboard
+- Check `read:filters`
+- Check `write:filters`
+- Copy value of "Your access token" to clipboard
 
 ```
 $ mastodon-filter config

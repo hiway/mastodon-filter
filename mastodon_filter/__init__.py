@@ -120,7 +120,7 @@ class MastodonFilters:
         response.raise_for_status()
         return response.json()
 
-    def list_filters(self) -> dict:
+    def filters(self) -> dict:
         """
         Get filters.
         """
@@ -132,7 +132,7 @@ class MastodonFilters:
         """
         if not title:
             raise ValueError("Title must not be empty.")
-        filters = self.list_filters()
+        filters = self.filters()
         for filter_item in filters:
             if filter_item["title"] == title:
                 return filter_item
@@ -224,7 +224,7 @@ def main_list() -> None:
     config = get_config()
     try:
         filters = MastodonFilters(config)
-        for filter_item in filters.list_filters():
+        for filter_item in filters.filters():
             click.echo(f"{filter_item['title']}: {len(filter_item['keywords'])}")
     except Exception as error:
         click.echo(error)
@@ -282,7 +282,7 @@ def main_create(
     filters = MastodonFilters(config)
     keywords = wordlist.read().decode("utf-8").splitlines()
     try:
-        for filter_item in filters.list_filters():
+        for filter_item in filters.filters():
             if filter_item["title"] == title:
                 raise ValueError(f"Filter already exists: {title}")
 

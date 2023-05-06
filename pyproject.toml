@@ -21,4 +21,4 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-mastodon-filter = "mastodon_filter:main"
+mastodon-filter = "mastodon_filter.cli:main"

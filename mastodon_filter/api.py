@@ -1,10 +1,50 @@
 import requests
-from typing import Optional
+from typing import Optional, Union
 
 from mastodon_filter.config import Config
 
 FILTER_CONTEXTS = ["home", "notifications", "public", "thread", "account"]
 FILTER_ACTIONS = ["warn", "hide"]
+
+
+def validate_title(title: str) -> None:
+    if not title:
+        raise ValueError("Title must not be empty.")
+
+
+def validate_context(context: str) -> None:
+    if not context:
+        raise ValueError("Context must not be empty.")
+    if not isinstance(context, (list, str)):
+        raise TypeError("Context must be a string or a list.")
+    if isinstance(context, str):
+        context = [context]
+    for context_item in context:
+        if context_item not in FILTER_CONTEXTS:
+            raise ValueError(
+                f"Invalid context: {context_item}, " "must be one of: {valid_contexts}"
+            )
+
+
+def validate_action(action: str) -> None:
+    if not action:
+        raise ValueError("Filter action must not be empty.")
+    if action not in FILTER_ACTIONS:
+        raise ValueError(
+            f"Invalid filter action: {action}, " "must be one of: {FILTER_ACTIONS}"
+        )
+
+
+def validate_keywords(keywords: Union[str, list[str]]) -> None:
+    if not keywords:
+        raise ValueError("Keywords must not be empty.")
+    if not isinstance(keywords, (str, list)):
+        raise TypeError("Keywords must be a string or a list.")
+
+
+def validate_expires_in(expires_in: int) -> None:
+    if expires_in and not isinstance(expires_in, int):
+        raise TypeError("Expires in must be an integer (seconds).")
 
 
 class MastodonFilters:
@@ -65,38 +105,17 @@ class MastodonFilters:
         title: str,
         context: str,
         action: str,
-        keywords: list[str],
+        keywords: Union[str, list[str]],
         expires_in: int = None,
     ) -> dict:
         """
         Create filter.
         """
-        if not title:
-            raise ValueError("Title must not be empty.")
-        if not context:
-            raise ValueError("Context must not be empty.")
-        if not isinstance(context, (list, str)):
-            raise TypeError("Context must be a string or a list.")
-        if isinstance(context, str):
-            context = [context]
-        for context_item in context:
-            if context_item not in FILTER_CONTEXTS:
-                raise ValueError(
-                    f"Invalid context: {context_item}, "
-                    "must be one of: {valid_contexts}"
-                )
-        if not action:
-            raise ValueError("Filter action must not be empty.")
-        if action not in FILTER_ACTIONS:
-            raise ValueError(
-                f"Invalid filter action: {action}, " "must be one of: {FILTER_ACTIONS}"
-            )
-        if not keywords:
-            raise ValueError("Keywords must not be empty.")
-        if not isinstance(keywords, (str, list)):
-            raise TypeError("Keywords must be a string or a list.")
-        if expires_in and not isinstance(expires_in, int):
-            raise TypeError("Expires in must be an integer (seconds).")
+        validate_title(title)
+        validate_context(context)
+        validate_action(action)
+        validate_keywords(keywords)
+        validate_expires_in(expires_in)
         params = {
             "title": title,
             "context[]": context,

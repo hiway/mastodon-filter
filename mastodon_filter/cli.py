@@ -3,6 +3,7 @@ import click
 from mastodon_filter.api import MastodonFilters, FILTER_ACTIONS, FILTER_CONTEXTS
 from mastodon_filter.config import Config, ensure_config_exists, get_config, save_config
 from mastodon_filter.errors import extract_error_message
+from mastodon_filter.templates import list_templates, load_template
 
 
 def validate_context(context: str) -> None:
@@ -173,3 +174,78 @@ def main_delete(title: str) -> None:
     except Exception as error:
         error_message = extract_error_message(error)
         click.echo(f"Could not delete filter: {title}, got response: {error_message}")
+
+
+@main.group()
+def template() -> None:
+    """
+    Filter templates.
+    """
+
+
+@template.command("list")
+def template_list() -> None:
+    """
+    List templates.
+    """
+    for template in list_templates():
+        click.echo(template)
+
+
+@template.command("show")
+@click.argument("name")
+def template_show(name: str) -> None:
+    """
+    Show template.
+    """
+    keywords = load_template(name)
+    for keyword in keywords:
+        click.echo(keyword)
+
+
+@template.command("use")
+@click.argument("name")
+@click.argument("title")
+@click.option(
+    "--context",
+    "-c",
+    default="home,public,thread",
+    prompt=True,
+)
+@click.option(
+    "--action", "-a", default="warn", prompt=True, type=click.Choice(FILTER_ACTIONS)
+)
+@click.option("--expires-in", "-e", type=int)
+def main_use(
+    name: str,
+    title: str,
+    context: list[str],
+    action: str,
+    expires_in: int,
+) -> None:
+    """
+    Use template to create a new filter.
+    """
+    ensure_config_exists()
+    config = get_config()
+    filters = MastodonFilters(config)
+    context = validate_context(context)
+    keywords = load_template(name)
+    try:
+        for filter_item in filters.filters():
+            if filter_item["title"] == title:
+                raise ValueError(f"Filter already exists: {title}")
+
+        response = filters.create(
+            title=title,
+            context=context,
+            action=action,
+            keywords=keywords,
+            expires_in=expires_in,
+        )
+        click.echo(
+            f"Filter created: {response['title']} with {len(keywords)} keywords."
+        )
+    except Exception as error:
+        error_message = extract_error_message(error)
+        click.echo(f"Could not create filter: {title}, got response: {error_message}")

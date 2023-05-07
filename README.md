@@ -118,3 +118,27 @@ Use `show` to backup the words to a text file before deleting.
 ```
 $ mastodon-filter delete TITLE
 ```
+
+#### List Filter Templates
+
+List names of available templates.
+
+```
+$ mastodon-filter template list
+```
+
+#### Show Filter Template
+
+Show the words in a template.
+
+```
+$ mastodon-filter template show NAME
+```
+
+#### Use Template to Create Filter
+
+Create a new filter from a template.
+
+```
+$ mastodon-filter template use NAME TITLE
+```

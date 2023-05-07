@@ -55,9 +55,9 @@ class MastodonFilters:
     def __init__(self, config: Config) -> None:
         self.config = config
 
-    def _keyword_params(self, keywords: list[str]) -> dict:
+    def _build_keyword_params(self, keywords: list[str]) -> dict:
         """
-        Get keyword params.
+        Build keyword params.
         """
         params = {}
         for i, keyword in enumerate(keywords):
@@ -122,7 +122,7 @@ class MastodonFilters:
             "expires_in": expires_in,
             "filter_action": action,
         }
-        params.update(self._keyword_params(keywords))
+        params.update(self._build_keyword_params(keywords))
         return self._call_api("post", "/api/v2/filters", params)
 
     def delete(self, title: str) -> dict:

@@ -2,19 +2,7 @@ import click
 
 from mastodon_filter.api import MastodonFilters, FILTER_ACTIONS, FILTER_CONTEXTS
 from mastodon_filter.config import Config, ensure_config_exists, get_config, save_config
-
-
-def extract_error_message(error: Exception) -> str:
-    """
-    Extract error message from exception.
-    """
-    try:
-        if len(str(error)) > 250:
-            return error.args[0][:250] + "..."
-        else:
-            return error.args[0]
-    except Exception:
-        return str(error)
+from mastodon_filter.errors import extract_error_message
 
 
 @click.group()

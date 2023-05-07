@@ -4,6 +4,19 @@ from mastodon_filter.api import MastodonFilters, FILTER_ACTIONS, FILTER_CONTEXTS
 from mastodon_filter.config import Config, ensure_config_exists, get_config, save_config
 
 
+def extract_error_message(error: Exception) -> str:
+    """
+    Extract error message from exception.
+    """
+    try:
+        if len(str(error)) > 250:
+            return error.args[0][:250] + "..."
+        else:
+            return error.args[0]
+    except Exception:
+        return str(error)
+
+
 @click.group()
 def main() -> None:
     """
@@ -37,7 +50,8 @@ def main_list() -> None:
         for filter_item in filters.filters():
             click.echo(f"{filter_item['title']}: {len(filter_item['keywords'])}")
     except Exception as error:
-        click.echo(error)
+        error_message = extract_error_message(error)
+        click.echo(f"Could not list filters: {title}, got response: {error_message}")
 
 
 @main.command("show")
@@ -54,7 +68,8 @@ def main_show(title: str) -> None:
         for keyword in filter_item["keywords"]:
             click.echo(keyword["keyword"])
     except Exception as error:
-        click.echo(error)
+        error_message = extract_error_message(error)
+        click.echo(f"Could not show filter: {title}, got response: {error_message}")
 
 
 @main.command("create")
@@ -107,7 +122,8 @@ def main_create(
             f"Filter created: {response['title']} with {len(keywords)} keywords."
         )
     except Exception as error:
-        click.echo(error)
+        error_message = extract_error_message(error)
+        click.echo(f"Could not create filter: {title}, got response: {error_message}")
 
 
 @main.command("delete")
@@ -123,4 +139,5 @@ def main_delete(title: str) -> None:
         filters.delete(title)
         click.echo(f"Filter deleted: {title}")
     except Exception as error:
-        click.echo(error)
+        error_message = extract_error_message(error)
+        click.echo(f"Could not delete filter: {title}, got response: {error_message}")

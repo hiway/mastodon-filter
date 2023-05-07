@@ -182,9 +182,12 @@ class MastodonFilters:
         }
         params.update(self._build_keyword_params(add_keywords))
         params.update(self._build_keyword_params(delete_keywords))
-        return self._call_api(
+        response = self._call_api(
             "put", f"/api/v2/filters/{filter_item['id']}", params=params
         )
+        response["added"] = add_keywords
+        response["deleted"] = delete_keywords
+        return response
 
     def delete(self, title: str) -> dict:
         """

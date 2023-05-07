@@ -53,11 +53,16 @@ Access token []: PASTE-YOUR-ACCESS-TOKEN-HERE
 
 #### List filter titles and keyword counts
 
+View all configured filters. 
+
 ```
 $ mastodon-filter list
 ```
 
 #### Show filter keywords
+
+Output each keyword in a filter on a separate line.
+Pipe output to `grep` to filter words.
 
 ```
 $ mastodon-filter show TITLE
@@ -65,11 +70,21 @@ $ mastodon-filter show TITLE
 
 #### Share / backup filter keywords
 
+Backup your existing filter to a file by redirecting output.
+Share the file with friends or strangers if you like.
+They can then use it to create their own filters.
+
 ```
 $ mastodon-filter show TITLE > WORDLIST-FILE
 ```
 
 #### Create a filter from a wordlist
+
+Have a list of words you want to filter?
+Someone shared their wordlist?
+Import it into your account and create a new filter.
+Filter titles must be unique.
+Use the `list` command to see your existing filters.
 
 ```
 $ mastodon-filter create TITLE WORDLIST-FILE
@@ -77,17 +92,28 @@ $ mastodon-filter create TITLE WORDLIST-FILE
 
 #### Create a filter from terminal input
 
+Quickly get started with a new filter list 
+by typing out the words or phrases,
+each on a new line.
+Finally press Ctrl+D to exit text-entry mode and save the filter.
+
 ```
 $ mastodon-filter create TITLE -
 ```
 
 #### Sync filter keywords from a wordlist
 
+Once you have a few filters set up, edit the text file locally
+and update the server to add new words or remove deleted words.
+
 ```
 $ mastodon-filter sync TITLE WORDLIST-FILE
 ```
 
 #### Delete a filter
+
+Delete a filter and discard all words in it.
+Use `show` to backup the words to a text file before deleting.
 
 ```
 $ mastodon-filter delete TITLE

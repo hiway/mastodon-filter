@@ -17,6 +17,7 @@ def validate_context(context: str) -> None:
                 f"Invalid context: {context_item}, " "must be one of: {valid_contexts}"
             )
             raise click.Abort()
+    return context
 
 
 @click.group()

@@ -5,6 +5,20 @@ from mastodon_filter.config import Config, ensure_config_exists, get_config, sav
 from mastodon_filter.errors import extract_error_message
 
 
+def validate_context(context: str) -> None:
+    if not context:
+        raise ValueError("Context must not be empty.")
+    if not isinstance(context, str):
+        raise TypeError("Context must be a comma separated string.")
+    context = [ctx.strip() for ctx in context.split(",")]
+    for context_item in context:
+        if context_item not in FILTER_CONTEXTS:
+            click.echo(
+                f"Invalid context: {context_item}, " "must be one of: {valid_contexts}"
+            )
+            raise click.Abort()
+
+
 @click.group()
 def main() -> None:
     """
@@ -83,13 +97,7 @@ def main_create(
     """
     Create filter.
     """
-    context = context.split(",")
-    for context_item in context:
-        if context_item not in FILTER_CONTEXTS:
-            click.echo(
-                f"Invalid context: {context_item}, " "must be one of: {valid_contexts}"
-            )
-            raise click.Abort()
+    context = validate_context(context)
     ensure_config_exists()
     config = get_config()
     filters = MastodonFilters(config)

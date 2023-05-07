@@ -27,6 +27,7 @@ def validate_context(context: str) -> list[str]:
             )
     return context
 
+
 def validate_action(action: str) -> str:
     if not action:
         raise ValueError("Filter action must not be empty.")
@@ -52,13 +53,14 @@ def validate_keywords(keywords: Union[str, list[str]]) -> list[str]:
         if keyword.startswith("#"):
             continue
         valid_keywords.append(keyword)
-    return valid_keywords   
-    
+    return valid_keywords
+
 
 def validate_expires_in(expires_in: int) -> int:
     if expires_in and not isinstance(expires_in, int):
         raise TypeError("Expires in must be an integer (seconds).")
     return expires_in
+
 
 class MastodonFilters:
     """

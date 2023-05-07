@@ -69,14 +69,24 @@ class MastodonFilters:
             params[f"keywords_attributes[{i}][whole_word]"] = True
         return params
 
-    def _call_api(self, method: str, path: str, params: Optional[dict] = None) -> dict:
+    def _call_api(
+        self,
+        method: str,
+        path: str,
+        data: Optional[dict] = None,
+        params: Optional[dict] = None,
+    ) -> dict:
         """
         Call API method.
         """
         response = requests.request(
             method=method,
             url=f"{self.config.api_base_url}{path}",
-            headers={"Authorization": f"Bearer {self.config.access_token}"},
+            headers={
+                "Authorization": f"Bearer {self.config.access_token}",
+                "Content-Type": "application/json",
+            },
+            data=data,
             params=params,
         )
         response.raise_for_status()
@@ -123,7 +133,7 @@ class MastodonFilters:
             "filter_action": action,
         }
         params.update(self._build_keyword_params(keywords))
-        return self._call_api("post", "/api/v2/filters", params)
+        return self._call_api("post", "/api/v2/filters", params=params)
 
     def delete(self, title: str) -> dict:
         """

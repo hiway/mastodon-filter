@@ -81,6 +81,12 @@ $ mastodon-filter create TITLE WORDLIST-FILE
 $ mastodon-filter create TITLE -
 ```
 
+#### Sync filter keywords from a wordlist
+
+```
+$ mastodon-filter sync TITLE WORDLIST-FILE
+```
+
 #### Delete a filter
 
 ```

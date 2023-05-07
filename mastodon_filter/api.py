@@ -151,6 +151,41 @@ class MastodonFilters:
         params.update(self._build_keyword_params(keywords))
         return self._call_api("post", "/api/v2/filters", params=params)
 
+    def sync(self, title: str, keywords: Union[str, list[str]]) -> dict:
+        """
+        Sync filter.
+        """
+        title = validate_title(title)
+        keywords = validate_keywords(keywords)
+        filter_item = self.filter(title)
+
+        remote_keywords = filter_item["keywords"]
+        remote_keywords = [Keyword(**keyword) for keyword in remote_keywords]
+
+        add_keywords = []
+        delete_keywords = []
+        for keyword in keywords:
+            if keyword in remote_keywords:
+                continue
+            add_keywords.append(keyword)
+        for keyword in remote_keywords:
+            if keyword in keywords:
+                continue
+            keyword_to_delete = Keyword(
+                keyword=keyword.keyword, id=keyword.id, delete=True
+            )
+            delete_keywords.append(keyword_to_delete)
+        params = {
+            "title": title,
+            "context[]": filter_item["context"],
+            "filter_action": filter_item["filter_action"],
+        }
+        params.update(self._build_keyword_params(add_keywords))
+        params.update(self._build_keyword_params(delete_keywords))
+        return self._call_api(
+            "put", f"/api/v2/filters/{filter_item['id']}", params=params
+        )
+
     def delete(self, title: str) -> dict:
         """
         Delete filter.

@@ -123,6 +123,28 @@ def main_create(
         click.echo(f"Could not create filter: {title}, got response: {error_message}")
 
 
+@main.command("sync")
+@click.argument("title")
+@click.argument("wordlist", type=click.File("rb", encoding="utf-8"))
+def main_sync(
+    title: str,
+    wordlist: click.File,
+) -> None:
+    """
+    Sync filter.
+    """
+    ensure_config_exists()
+    config = get_config()
+    filters = MastodonFilters(config)
+    keywords = wordlist.read().decode("utf-8").splitlines()
+    try:
+        filters.sync(title, keywords)
+        click.echo(f"Filter synced: {title}.")
+    except Exception as error:
+        error_message = extract_error_message(error)
+        click.echo(f"Could not sync filter: {title}, got response: {error_message}")
+
+
 @main.command("delete")
 @click.argument("title")
 def main_delete(title: str) -> None:

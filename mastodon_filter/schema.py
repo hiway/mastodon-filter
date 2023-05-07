@@ -14,3 +14,6 @@ class Keyword:
 
     def __str__(self):
         return self.keyword
+
+    def __eq__(self, o):
+        return self.keyword == o.keyword

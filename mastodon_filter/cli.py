@@ -34,7 +34,7 @@ def main_config() -> None:
     """
     config = get_config()
     api_base_url = click.prompt(
-        "Instance URL", default=config.api_base_url or "https://mastodon.social"
+        "Instance URL", default=config.api_base_url or "https://example.social"
     )
     access_token = click.prompt("Access token", default=config.access_token)
     config = Config(api_base_url, access_token)

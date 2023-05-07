@@ -2,6 +2,7 @@ import requests
 from typing import Optional, Union
 
 from mastodon_filter.config import Config
+from mastodon_filter.schema import Keyword
 
 FILTER_CONTEXTS = ["home", "notifications", "public", "thread", "account"]
 FILTER_ACTIONS = ["warn", "hide"]
@@ -38,7 +39,7 @@ def validate_action(action: str) -> str:
     return action
 
 
-def validate_keywords(keywords: Union[str, list[str]]) -> list[str]:
+def validate_keywords(keywords: Union[str, list[str]]) -> list[Keyword]:
     if not keywords:
         raise ValueError("Keywords must not be empty.")
     if not isinstance(keywords, (str, list)):
@@ -52,7 +53,7 @@ def validate_keywords(keywords: Union[str, list[str]]) -> list[str]:
             continue
         if keyword.startswith("#"):
             continue
-        valid_keywords.append(keyword)
+        valid_keywords.append(Keyword(keyword))
     return valid_keywords
 
 
@@ -70,14 +71,18 @@ class MastodonFilters:
     def __init__(self, config: Config) -> None:
         self.config = config
 
-    def _build_keyword_params(self, keywords: list[str]) -> dict:
+    def _build_keyword_params(self, keywords: list[Keyword]) -> dict:
         """
         Build keyword params.
         """
         params = {}
         for i, keyword in enumerate(keywords):
-            params[f"keywords_attributes[{i}][keyword]"] = keyword
-            params[f"keywords_attributes[{i}][whole_word]"] = True
+            params[f"keywords_attributes[{i}][keyword]"] = keyword.keyword
+            params[f"keywords_attributes[{i}][whole_word]"] = keyword.whole_word
+            if keyword.id:
+                params[f"keywords_attributes[{i}][id]"] = keyword.id
+            if keyword.delete:
+                params[f"keywords_attributes[{i}][_destroy]"] = True
         return params
 
     def _call_api(

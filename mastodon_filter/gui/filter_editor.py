@@ -28,6 +28,7 @@ class FilterEditor(ctk.CTkFrame):
         """Initialize UI."""
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=50)
+        self.grid_rowconfigure(2, weight=2)
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure(2, weight=1)

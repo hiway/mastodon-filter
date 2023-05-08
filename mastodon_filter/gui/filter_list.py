@@ -19,6 +19,7 @@ class FilterList(tk.Frame):
         tk.Frame.__init__(self, parent, **kwargs)
         self.parent = parent
         self.cached_filters_path = APP_DIR / "filters.json"
+        self.current_filter = tk.StringVar()
         self.init_ui()
 
     def init_ui(self):
@@ -56,6 +57,7 @@ class FilterList(tk.Frame):
         selection = widget.curselection()
         try:
             title = widget.get(selection[0])
+            self.current_filter.set(title)
             self.parent.filter_editor.load_filter(self.cached_filters_path, title)
         except IndexError:
             pass

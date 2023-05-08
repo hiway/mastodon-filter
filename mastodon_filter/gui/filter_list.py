@@ -24,6 +24,7 @@ class FilterList(tk.Frame):
     def init_ui(self):
         """Initialize UI."""
         self.filters = tk.Listbox(self)
+        self.filters.bind("<<ListboxSelect>>", self.filter_selected)
         self.filters.pack(fill=tk.BOTH, expand=True)
         self.load_filters()
         self.pack(fill=tk.BOTH, expand=True)
@@ -48,3 +49,13 @@ class FilterList(tk.Frame):
         self.filters.delete(0, tk.END)
         for filter in filters:  # pylint: disable=redefined-builtin
             self.filters.insert(tk.END, filter["title"])
+
+    def filter_selected(self, event):
+        """Handle filter selection."""
+        widget = event.widget
+        selection = widget.curselection()
+        try:
+            title = widget.get(selection[0])
+            self.parent.filter_editor.load_filter(self.cached_filters_path, title)
+        except IndexError:
+            pass

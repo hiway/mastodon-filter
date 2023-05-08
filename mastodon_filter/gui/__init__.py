@@ -20,8 +20,8 @@ class MastodonFilterGUI(tk.Frame):
         """Initialize App UI."""
         self.parent.title("MastodonFilter")
         self.init_menu_bar()
-        self.init_filter_list()
         self.init_filter_editor()
+        self.init_filter_list()
         self.pack(fill=tk.BOTH, expand=True)
 
     def init_menu_bar(self):

@@ -83,8 +83,9 @@ class FilterList(ctk.CTkFrame):
         with open(self.cached_filters_path, "r", encoding="utf-8") as file:
             filters = json.load(file)
         self.filters.delete(0, tk.END)
-        for filter in filters:  # pylint: disable=redefined-builtin
-            self.filters.insert(tk.END, filter["title"])
+        filter_titles = sorted([filter["title"] for filter in filters])
+        for title in filter_titles:  # pylint: disable=redefined-builtin
+            self.filters.insert(tk.END, title)
 
     def filter_selected(self, event):
         """Handle filter selection."""
@@ -128,6 +129,10 @@ class FilterList(ctk.CTkFrame):
                 keywords=["example-keyword"],
             )
             self.load_filters()
+            self.filters.select_clear(0, tk.END)
+            # get index of title
+            index = self.filters.get(0, tk.END).index(title)
+            self.filters.select_set(index)
             self.parent.filter_editor.load_filter(self.cached_filters_path, title)
             print(f"Created filter: {title}")
         except Exception as err:  # pylint: disable=broad-except
@@ -147,6 +152,9 @@ class FilterList(ctk.CTkFrame):
         title = self.current_filter.get()
         if not title:
             return
+        # disable delete button and filters listbox
+        self.button_delete.configure(state="disabled")
+        self.filters.configure(state="disabled")
         thread = threading.Thread(
             target=self.delete_filter_thread,
             args=(title,),
@@ -162,6 +170,7 @@ class FilterList(ctk.CTkFrame):
         try:
             filters = MastodonFilters(config)
             filters.delete(title)
+            self.filters.configure(state="normal")
             self.load_filters()
             self.parent.filter_editor.editor.delete("1.0", tk.END)
             self.parent.filter_editor.editor.edit_reset()
@@ -169,3 +178,6 @@ class FilterList(ctk.CTkFrame):
         except Exception as err:
             error_message = extract_error_message(err)
             messagebox.showerror("Error", error_message)
+        finally:
+            # enable delete button and filters listbox
+            self.button_delete.configure(state="normal")

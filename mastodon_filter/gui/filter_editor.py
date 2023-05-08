@@ -39,3 +39,4 @@ class FilterEditor(tk.Frame):
         keywords = "\n".join(keywords_list)
         self.editor.delete("1.0", tk.END)
         self.editor.insert(tk.END, keywords)
+        self.editor.edit_reset()

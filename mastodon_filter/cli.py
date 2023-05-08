@@ -55,7 +55,7 @@ def main_list() -> None:
             click.echo(f"{filter_item['title']}: {len(filter_item['keywords'])}")
     except Exception as error:
         error_message = extract_error_message(error)
-        click.echo(f"Could not list filters: {title}, got response: {error_message}")
+        click.echo(f"Could not list filters, got response: {error_message}")
 
 
 @main.command("show")

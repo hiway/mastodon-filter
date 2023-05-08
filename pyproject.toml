@@ -11,6 +11,7 @@ packages = [{ include = "mastodon_filter" }]
 python = "^3.9"
 click = "^8.1.3"
 requests = "^2.30.0"
+click-default-group = "^1.2.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.1"

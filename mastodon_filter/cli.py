@@ -1,25 +1,11 @@
 import click
 from click_default_group import DefaultGroup
 
-from mastodon_filter.api import MastodonFilters, FILTER_ACTIONS, FILTER_CONTEXTS
+from mastodon_filter.api import MastodonFilters, FILTER_ACTIONS
 from mastodon_filter.config import Config, ensure_config_exists, get_config, save_config
 from mastodon_filter.errors import extract_error_message
 from mastodon_filter.templates import list_templates, load_template
-
-
-def validate_context(context: str) -> None:
-    if not context:
-        raise ValueError("Context must not be empty.")
-    if not isinstance(context, str):
-        raise TypeError("Context must be a comma separated string.")
-    context = [ctx.strip() for ctx in context.split(",")]
-    for context_item in context:
-        if context_item not in FILTER_CONTEXTS:
-            click.echo(
-                f"Invalid context: {context_item}, " "must be one of: {valid_contexts}"
-            )
-            raise click.Abort()
-    return context
+from mastodon_filter.validate import validate_context_string
 
 
 @click.group(cls=DefaultGroup, default="gui", default_if_no_args=True)
@@ -34,7 +20,7 @@ def main_gui() -> None:
     """
     Run the GUI.
     """
-    from mastodon_filter.gui import run_gui
+    from mastodon_filter.gui import run_gui  # pylint: disable=import-outside-toplevel
 
     run_gui()
 
@@ -110,7 +96,7 @@ def main_create(
     """
     Create filter.
     """
-    context = validate_context(context)
+    context = validate_context_string(context)
     ensure_config_exists()
     config = get_config()
     filters = MastodonFilters(config)
@@ -240,7 +226,7 @@ def main_use(
     ensure_config_exists()
     config = get_config()
     filters = MastodonFilters(config)
-    context = validate_context(context)
+    context = validate_context_string(context)
     keywords = load_template(name)
     try:
         for filter_item in filters.filters():

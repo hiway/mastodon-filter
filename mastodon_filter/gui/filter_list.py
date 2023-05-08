@@ -1,6 +1,7 @@
 """
 Mastodon FilterList.
 """
+# pylint: disable=attribute-defined-outside-init
 import tkinter as tk
 
 
@@ -14,7 +15,7 @@ class FilterList(tk.Frame):
         self.init_ui()
 
     def init_ui(self):
-        """Initialize App UI."""
+        """Initialize UI."""
         self.filters = tk.Listbox(self)
         self.filters.pack(fill=tk.BOTH, expand=True)
         self.load_filters()

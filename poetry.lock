@@ -68,6 +68,28 @@ optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
 
 [[package]]
+name = "customtkinter"
+version = "5.1.3"
+description = "Create modern looking GUIs with Python"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+darkdetect = "*"
+
+[[package]]
+name = "darkdetect"
+version = "0.8.0"
+description = "Detect OS Dark Mode from Python"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+macos-listener = ["pyobjc-framework-Cocoa"]
+
+[[package]]
 name = "exceptiongroup"
 version = "1.1.1"
 description = "Backport of PEP 654 (exception groups)"
@@ -212,7 +234,7 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "e502d1f65fd00318d00a60c5fec3f9a2b88b021a7659243c68c928456b42c7f4"
+content-hash = "e57340e4f7954584d4597d1c8f2e73513833063f03d9c868e7c38553395f62e4"
 
 [metadata.files]
 black = [
@@ -315,6 +337,14 @@ click-default-group = [
 colorama = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
+]
+customtkinter = [
+    {file = "customtkinter-5.1.3-py3-none-any.whl", hash = "sha256:f0a7ce6a66c0ebcc8f1cbd257b8f7d82c45e5f49f3bcdd98223e215e33e67961"},
+    {file = "customtkinter-5.1.3.tar.gz", hash = "sha256:69a22f3ecfb6d481b566e2125acc8286f55e60c4fdc29990a4a4550250942380"},
+]
+darkdetect = [
+    {file = "darkdetect-0.8.0-py3-none-any.whl", hash = "sha256:a7509ccf517eaad92b31c214f593dbcf138ea8a43b2935406bbd565e15527a85"},
+    {file = "darkdetect-0.8.0.tar.gz", hash = "sha256:b5428e1170263eb5dea44c25dc3895edd75e6f52300986353cd63533fe7df8b1"},
 ]
 exceptiongroup = [
     {file = "exceptiongroup-1.1.1-py3-none-any.whl", hash = "sha256:232c37c63e4f682982c8b6459f33a8981039e5fb8756b2074364e5055c498c9e"},

@@ -161,5 +161,5 @@ class MastodonFilters:
         if not path:
             raise ValueError("Path must not be empty.")
         filters = self.filters()
-        path.write_text(json.dumps(filters))
+        path.write_text(json.dumps(filters), encoding="utf-8")
         return filters

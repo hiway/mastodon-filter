@@ -1,4 +1,5 @@
 import click
+from click_default_group import DefaultGroup
 
 from mastodon_filter.api import MastodonFilters, FILTER_ACTIONS, FILTER_CONTEXTS
 from mastodon_filter.config import Config, ensure_config_exists, get_config, save_config
@@ -21,11 +22,21 @@ def validate_context(context: str) -> None:
     return context
 
 
-@click.group()
+@click.group(cls=DefaultGroup, default="gui", default_if_no_args=True)
 def main() -> None:
     """
     Manage keyword filters on Mastodon from command-line.
     """
+
+
+@main.command("gui")
+def main_gui() -> None:
+    """
+    Run the GUI.
+    """
+    from mastodon_filter.gui import run_gui
+
+    run_gui()
 
 
 @main.command("config")

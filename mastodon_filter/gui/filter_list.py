@@ -4,9 +4,10 @@ Mastodon FilterList.
 # pylint: disable=attribute-defined-outside-init
 import json
 import tkinter as tk
+from tkinter import messagebox
+
 import customtkinter as ctk
 from darkdetect import isDark
-from tkinter import messagebox
 
 from mastodon_filter.api import MastodonFilters
 from mastodon_filter.config import APP_DIR, get_config

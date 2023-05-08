@@ -1,6 +1,6 @@
 # mastodon-filter
 
-Manage keyword filters on Mastodon from command-line.
+Manage keyword filters on Mastodon from command-line (and a simple GUI).
 
 
 ## Installation

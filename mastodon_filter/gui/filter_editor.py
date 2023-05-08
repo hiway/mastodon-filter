@@ -21,9 +21,12 @@ class FilterEditor(ctk.CTkFrame):
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=50)
         self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure(2, weight=1)
+        self.grid_columnconfigure(3, weight=1)
 
         self.label = ctk.CTkLabel(self, text="Keywords")
-        self.label.grid(row=0, column=0, sticky="nsew")
+        self.label.grid(row=0, column=0, columnspan=4, sticky="nsew")
         self.init_editor()
         self.grid(row=0, column=1, columnspan=3, sticky="nsew")
 
@@ -35,7 +38,7 @@ class FilterEditor(ctk.CTkFrame):
             autoseparators=True,
             maxundo=-1,
         )
-        self.editor.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
+        self.editor.grid(row=1, column=0, columnspan=4, sticky="nsew", padx=5, pady=5)
 
     def load_filter(self, cached_filters_path, title):
         """Load filter."""

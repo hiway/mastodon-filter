@@ -20,6 +20,6 @@ def load_template(template_name: str) -> list[str]:
     templates_path = Path(__file__).parent / "templates"
     template_path = templates_path / (template_name + ".txt")
     if not template_path.exists():
-        raise ValueError(f"Template not found: {template_name}")
+        raise ValueError(f"Template not found: {template_name} at {template_path}")
     with template_path.open("rb") as template_file:
         return template_file.read().decode("utf-8").splitlines()

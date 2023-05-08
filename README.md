@@ -51,6 +51,12 @@ Instance URL [https://example.social]: https://mastodon.sharma.io
 Access token []: PASTE-YOUR-ACCESS-TOKEN-HERE
 ```
 
+### Run GUI
+
+```
+$ mastodon-filter
+```
+
 #### List filter titles and keyword counts
 
 View all configured filters. 

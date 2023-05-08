@@ -3,31 +3,34 @@ MastodonFilter GUI.
 """
 # pylint: disable=attribute-defined-outside-init
 import tkinter as tk
+import customtkinter as ctk
+
 from mastodon_filter.gui.filter_list import FilterList
 from mastodon_filter.gui.filter_editor import FilterEditor
 
 
-class MastodonFilterGUI(tk.Frame):
+class MastodonFilterGUI(ctk.CTk):
     """MastodonFilter GUI."""
 
-    def __init__(self, parent):
+    def __init__(self):
         """Initialize Frame."""
-        tk.Frame.__init__(self, parent)
-        self.parent = parent
+        super().__init__()
         self.init_ui()
 
     def init_ui(self):
         """Initialize App UI."""
-        self.parent.title("MastodonFilter")
+        self.geometry("800x600")
+        self.title("MastodonFilter")
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)
         self.init_menu_bar()
         self.init_filter_editor()
         self.init_filter_list()
-        self.pack(fill=tk.BOTH, expand=True)
 
     def init_menu_bar(self):
         """Initialize the menu bar."""
-        self.menu_bar = tk.Menu(self.parent)
-        self.parent.config(menu=self.menu_bar)
+        self.menu_bar = tk.Menu(self)
+        self.config(menu=self.menu_bar)
 
         # File menu
         self.file_menu = tk.Menu(self.menu_bar, tearoff=0)
@@ -60,7 +63,8 @@ class MastodonFilterGUI(tk.Frame):
 
 def run_gui():
     """Run the GUI."""
-    root = tk.Tk()
-    root.geometry("640x480+300+300")
-    MastodonFilterGUI(root)
-    root.mainloop()
+    ctk.set_appearance_mode("System")  # Modes: system (default), light, dark
+    ctk.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
+
+    app = MastodonFilterGUI()
+    app.mainloop()

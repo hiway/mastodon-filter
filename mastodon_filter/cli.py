@@ -1,11 +1,11 @@
 import click
 from click_default_group import DefaultGroup
 
-from mastodon_filter.api import MastodonFilters, FILTER_ACTIONS
+from mastodon_filter.api import MastodonFilters
 from mastodon_filter.config import Config, ensure_config_exists, get_config, save_config
 from mastodon_filter.errors import extract_error_message
 from mastodon_filter.templates import list_templates, load_template
-from mastodon_filter.validate import validate_context_string
+from mastodon_filter.validate import validate_context_string, FILTER_ACTIONS
 
 
 @click.group(cls=DefaultGroup, default="gui", default_if_no_args=True)

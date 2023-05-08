@@ -3,64 +3,13 @@ from typing import Optional, Union
 
 from mastodon_filter.config import Config
 from mastodon_filter.schema import Keyword
-
-FILTER_CONTEXTS = ["home", "notifications", "public", "thread", "account"]
-FILTER_ACTIONS = ["warn", "hide"]
-
-
-def validate_title(title: str) -> str:
-    if not title:
-        raise ValueError("Title must not be empty.")
-    return title
-
-
-def validate_context(context: str) -> list[str]:
-    if not context:
-        raise ValueError("Context must not be empty.")
-    if not isinstance(context, (list, str)):
-        raise TypeError("Context must be a string or a list.")
-    if isinstance(context, str):
-        context = [context]
-    for context_item in context:
-        if context_item not in FILTER_CONTEXTS:
-            raise ValueError(
-                f"Invalid context: {context_item}, " "must be one of: {valid_contexts}"
-            )
-    return context
-
-
-def validate_action(action: str) -> str:
-    if not action:
-        raise ValueError("Filter action must not be empty.")
-    if action not in FILTER_ACTIONS:
-        raise ValueError(
-            f"Invalid filter action: {action}, " "must be one of: {FILTER_ACTIONS}"
-        )
-    return action
-
-
-def validate_keywords(keywords: Union[str, list[str]]) -> list[Keyword]:
-    if not keywords:
-        raise ValueError("Keywords must not be empty.")
-    if not isinstance(keywords, (str, list)):
-        raise TypeError("Keywords must be a string or a list.")
-    if isinstance(keywords, str):
-        keywords = [keywords]
-
-    valid_keywords = []
-    for keyword in keywords:
-        if not keyword:
-            continue
-        if keyword.startswith("#"):
-            continue
-        valid_keywords.append(Keyword(keyword))
-    return valid_keywords
-
-
-def validate_expires_in(expires_in: int) -> int:
-    if expires_in and not isinstance(expires_in, int):
-        raise TypeError("Expires in must be an integer (seconds).")
-    return expires_in
+from mastodon_filter.validate import (
+    validate_action,
+    validate_context,
+    validate_keywords,
+    validate_title,
+    validate_expires_in,
+)
 
 
 class MastodonFilters:

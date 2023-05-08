@@ -102,11 +102,11 @@ class FilterEditor(ctk.CTkFrame):
             filters = MastodonFilters(config)
             filters.sync(title=title, keywords=keywords_list)
             self.parent.filter_list.load_filters()
+            self.editor.configure(state="normal")
             self.load_filter(self.cached_filters_path, title)
         except Exception as err:  # pylint: disable=broad-except
             error_message = extract_error_message(err)
             messagebox.showerror("Error", error_message)
         finally:
             self.button_save.configure(text="Save", state="normal")
-            self.editor.configure(state="normal")
             print("Done.")

@@ -24,11 +24,16 @@ class FilterList(ctk.CTkFrame):
         self.cached_filters_path = APP_DIR / "filters.json"
         self.current_filter = tk.StringVar()
         self.init_ui()
+        self.grid(row=0, column=0, sticky="nsew")
 
     def init_ui(self):
         """Initialize UI."""
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=50)
+        self.grid_columnconfigure(0, weight=1)
+
         self.label = ctk.CTkLabel(self, text="Filters")
-        self.label.pack(fill=tk.X)
+        self.label.grid(row=0, column=0, sticky="ew")
 
         self.filters = tk.Listbox(
             self,
@@ -36,7 +41,7 @@ class FilterList(ctk.CTkFrame):
             bg="#2f2f2f" if isDark() else "#dadada",
         )
         self.filters.bind("<<ListboxSelect>>", self.filter_selected)
-        self.filters.pack(fill=tk.BOTH, expand=True, padx=15, pady=5, ipadx=5, ipady=5)
+        self.filters.grid(row=1, column=0, sticky="nsew", padx=15, pady=5)
         self.load_filters()
 
     def load_filters(self):

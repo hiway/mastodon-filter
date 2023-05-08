@@ -18,12 +18,14 @@ class FilterEditor(ctk.CTkFrame):
 
     def init_ui(self):
         """Initialize UI."""
-        self.grid_columnconfigure(1, weight=1)
-        self.grid_rowconfigure(2, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=50)
+        self.grid_columnconfigure(0, weight=1)
+
         self.label = ctk.CTkLabel(self, text="Keywords")
-        self.label.grid(row=0, column=0, sticky="ew")
-        self.label.pack(fill=tk.X)
+        self.label.grid(row=0, column=0, sticky="nsew")
         self.init_editor()
+        self.grid(row=0, column=1, columnspan=3, sticky="nsew")
 
     def init_editor(self):
         """Initialize editor."""
@@ -32,10 +34,8 @@ class FilterEditor(ctk.CTkFrame):
             undo=True,
             autoseparators=True,
             maxundo=-1,
-            # font=("Courier", 14),
         )
-        self.editor.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
-        # self.editor.grid(row=1, column=3, sticky="nsew")
+        self.editor.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
 
     def load_filter(self, cached_filters_path, title):
         """Load filter."""

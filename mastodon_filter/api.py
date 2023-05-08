@@ -53,6 +53,7 @@ class MastodonFilters:
             },
             data=data,
             params=params,
+            timeout=10,
         )
         response.raise_for_status()
         return response.json()

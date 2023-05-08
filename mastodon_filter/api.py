@@ -1,5 +1,11 @@
-import requests
+"""
+Mastodon filters API client.
+"""
+import json
+from pathlib import Path
 from typing import Optional, Union
+
+import requests
 
 from mastodon_filter.config import Config
 from mastodon_filter.schema import Keyword
@@ -147,3 +153,13 @@ class MastodonFilters:
             raise ValueError("Title must not be empty.")
         filter_item = self.filter(title)
         return self._call_api("delete", f"/api/v2/filters/{filter_item['id']}")
+
+    def export(self, path: Path) -> dict:
+        """
+        Export filters.
+        """
+        if not path:
+            raise ValueError("Path must not be empty.")
+        filters = self.filters()
+        path.write_text(json.dumps(filters))
+        return filters

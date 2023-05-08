@@ -1,3 +1,8 @@
+"""
+Command-line interface.
+"""
+from pathlib import Path
+
 import click
 from click_default_group import DefaultGroup
 
@@ -154,6 +159,20 @@ def main_sync(
     except Exception as error:
         error_message = extract_error_message(error)
         click.echo(f"Could not sync filter: {title}, got response: {error_message}")
+
+
+@main.command("export")
+@click.argument("path", type=click.Path(exists=False))
+def main_export(path) -> None:
+    """
+    Export all filters.
+    """
+    path = Path(path)
+    ensure_config_exists()
+    config = get_config()
+    filters = MastodonFilters(config)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    filters.cache(path)
 
 
 @main.command("delete")

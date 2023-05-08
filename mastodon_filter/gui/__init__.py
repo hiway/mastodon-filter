@@ -4,6 +4,7 @@ MastodonFilter GUI.
 # pylint: disable=attribute-defined-outside-init
 import tkinter as tk
 from mastodon_filter.gui.filter_list import FilterList
+from mastodon_filter.gui.filter_editor import FilterEditor
 
 
 class MastodonFilterGUI(tk.Frame):
@@ -20,6 +21,7 @@ class MastodonFilterGUI(tk.Frame):
         self.parent.title("MastodonFilter")
         self.init_menu_bar()
         self.init_filter_list()
+        self.init_filter_editor()
         self.pack(fill=tk.BOTH, expand=True)
 
     def init_menu_bar(self):
@@ -49,6 +51,11 @@ class MastodonFilterGUI(tk.Frame):
         """Initialize the filter list."""
         self.filter_list = FilterList(self, relief=tk.SUNKEN, borderwidth=0)
         self.filter_list.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+
+    def init_filter_editor(self):
+        """Initialize the filter editor."""
+        self.filter_editor = FilterEditor(self, relief=tk.SUNKEN, borderwidth=0)
+        self.filter_editor.pack(fill=tk.BOTH, expand=True, side=tk.RIGHT)
 
 
 def run_gui():

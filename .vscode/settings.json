@@ -9,7 +9,14 @@
         "editor.formatOnSave": true
     },
     "cSpell.words": [
+        "autoseparators",
         "customtkinter",
+        "darkdetect",
+        "ipadx",
+        "ipady",
+        "maxundo",
+        "padx",
+        "pady",
         "wordlist"
     ],
 }

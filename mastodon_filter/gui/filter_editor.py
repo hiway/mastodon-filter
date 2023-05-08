@@ -4,26 +4,38 @@ Mastodon FilterEditor.
 # pylint: disable=attribute-defined-outside-init
 import json
 import tkinter as tk
+import customtkinter as ctk
 
 
-class FilterEditor(tk.Frame):
+class FilterEditor(ctk.CTkFrame):
     """Mastodon FilterList."""
 
     def __init__(self, parent, **kwargs):
         """Initialize Frame."""
-        tk.Frame.__init__(self, parent, **kwargs)
+        ctk.CTkFrame.__init__(self, parent, **kwargs)
         self.parent = parent
         self.init_ui()
 
     def init_ui(self):
         """Initialize UI."""
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_rowconfigure(2, weight=1)
+        self.label = ctk.CTkLabel(self, text="Keywords")
+        self.label.grid(row=0, column=0, sticky="ew")
+        self.label.pack(fill=tk.X)
         self.init_editor()
-        self.pack(fill=tk.BOTH, expand=True)
 
     def init_editor(self):
         """Initialize editor."""
-        self.editor = tk.Text(self, undo=True, autoseparators=True, maxundo=-1)
-        self.editor.pack(fill=tk.BOTH, expand=True)
+        self.editor = ctk.CTkTextbox(
+            self,
+            undo=True,
+            autoseparators=True,
+            maxundo=-1,
+            # font=("Courier", 14),
+        )
+        self.editor.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+        # self.editor.grid(row=1, column=3, sticky="nsew")
 
     def load_filter(self, cached_filters_path, title):
         """Load filter."""

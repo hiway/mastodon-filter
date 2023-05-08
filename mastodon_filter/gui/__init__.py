@@ -21,7 +21,7 @@ class MastodonFilterGUI(ctk.CTk):
         """Initialize App UI."""
         self.geometry("800x600")
         self.title("MastodonFilter")
-        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(3, weight=1)
         self.grid_rowconfigure(0, weight=1)
         self.init_menu_bar()
         self.init_filter_editor()
@@ -52,13 +52,13 @@ class MastodonFilterGUI(ctk.CTk):
 
     def init_filter_list(self):
         """Initialize the filter list."""
-        self.filter_list = FilterList(self, relief=tk.SUNKEN, borderwidth=0)
-        self.filter_list.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+        self.filter_list = FilterList(self)
+        self.filter_list.grid(row=0, column=0, sticky="nsew")
 
     def init_filter_editor(self):
         """Initialize the filter editor."""
-        self.filter_editor = FilterEditor(self, relief=tk.SUNKEN, borderwidth=0)
-        self.filter_editor.pack(fill=tk.BOTH, expand=True, side=tk.RIGHT)
+        self.filter_editor = FilterEditor(self)
+        self.filter_editor.grid(row=0, column=3, sticky="nsew")
 
 
 def run_gui():

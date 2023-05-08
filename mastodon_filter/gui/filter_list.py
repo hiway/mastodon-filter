@@ -4,6 +4,8 @@ Mastodon FilterList.
 # pylint: disable=attribute-defined-outside-init
 import json
 import tkinter as tk
+import customtkinter as ctk
+from darkdetect import isDark
 from tkinter import messagebox
 
 from mastodon_filter.api import MastodonFilters
@@ -11,12 +13,12 @@ from mastodon_filter.config import APP_DIR, get_config
 from mastodon_filter.errors import extract_error_message
 
 
-class FilterList(tk.Frame):
+class FilterList(ctk.CTkFrame):
     """Mastodon FilterList."""
 
     def __init__(self, parent, **kwargs):
         """Initialize Frame."""
-        tk.Frame.__init__(self, parent, **kwargs)
+        ctk.CTkFrame.__init__(self, parent, **kwargs)
         self.parent = parent
         self.cached_filters_path = APP_DIR / "filters.json"
         self.current_filter = tk.StringVar()
@@ -24,11 +26,17 @@ class FilterList(tk.Frame):
 
     def init_ui(self):
         """Initialize UI."""
-        self.filters = tk.Listbox(self)
+        self.label = ctk.CTkLabel(self, text="Filters")
+        self.label.pack(fill=tk.X)
+
+        self.filters = tk.Listbox(
+            self,
+            bd=0,
+            bg="#2f2f2f" if isDark() else "#dadada",
+        )
         self.filters.bind("<<ListboxSelect>>", self.filter_selected)
-        self.filters.pack(fill=tk.BOTH, expand=True)
+        self.filters.pack(fill=tk.BOTH, expand=True, padx=15, pady=5, ipadx=5, ipady=5)
         self.load_filters()
-        self.pack(fill=tk.BOTH, expand=True)
 
     def load_filters(self):
         """Load filters."""

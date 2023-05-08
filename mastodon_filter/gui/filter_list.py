@@ -3,6 +3,7 @@ Mastodon FilterList.
 """
 # pylint: disable=attribute-defined-outside-init
 import json
+import threading
 import tkinter as tk
 from tkinter import messagebox
 
@@ -29,7 +30,11 @@ class FilterList(ctk.CTkFrame):
     def init_ui(self):
         """Initialize UI."""
         self.grid_rowconfigure(0, weight=1)
-        self.grid_rowconfigure(1, weight=50)
+        self.grid_rowconfigure(1, weight=20)
+        self.grid_rowconfigure(2, weight=1)
+        self.grid_rowconfigure(3, weight=1)
+        self.grid_rowconfigure(4, weight=1)
+        self.grid_rowconfigure(5, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
         self.label = ctk.CTkLabel(self, text="Filters")
@@ -42,6 +47,22 @@ class FilterList(ctk.CTkFrame):
         )
         self.filters.bind("<<ListboxSelect>>", self.filter_selected)
         self.filters.grid(row=1, column=0, sticky="nsew", padx=15, pady=5)
+
+        self.button_delete = ctk.CTkButton(
+            self,
+            text="Delete",
+            command=self.delete_filter,
+            fg_color="#ff8888",
+        )
+        self.button_delete.grid(row=2, column=0, sticky="nsew", padx=15, pady=5)
+
+        self.button_create = ctk.CTkButton(
+            self,
+            text="Create",
+            command=self.create_filter,
+        )
+        self.button_create.grid(row=3, column=0, sticky="nsew", padx=15, pady=5)
+
         self.load_filters()
 
     def load_filters(self):
@@ -75,3 +96,76 @@ class FilterList(ctk.CTkFrame):
             self.parent.filter_editor.load_filter(self.cached_filters_path, title)
         except IndexError:
             pass
+
+    def create_filter(self):
+        """Create filter."""
+        title = tk.simpledialog.askstring(
+            "Create filter",
+            "Enter a title for the filter:",
+            parent=self,
+        )
+        if not title:
+            return
+        self.current_filter.set(title)
+        thread = threading.Thread(
+            target=self.create_filter_thread,
+            args=(title,),
+        )
+        thread.start()
+
+    def create_filter_thread(self, title):
+        """Create filter thread."""
+        config = get_config()
+        if not config.api_base_url or not config.access_token:
+            return
+        print(f"Creating filter: {title}")
+        try:
+            filters = MastodonFilters(config)
+            filters.create(
+                title=title,
+                context=["home", "public", "thread"],
+                action="warn",
+                keywords=["example-keyword"],
+            )
+            self.load_filters()
+            self.parent.filter_editor.load_filter(self.cached_filters_path, title)
+            print(f"Created filter: {title}")
+        except Exception as err:  # pylint: disable=broad-except
+            error_message = extract_error_message(err)
+            messagebox.showerror("Error", error_message)
+
+    def delete_filter(self):
+        """Delete filter."""
+        if not self.current_filter.get():
+            return
+        if not messagebox.askyesno(
+            "Delete filter",
+            f"Are you sure you want to delete the filter: {self.current_filter.get()}?",
+            parent=self,
+        ):
+            return
+        title = self.current_filter.get()
+        if not title:
+            return
+        thread = threading.Thread(
+            target=self.delete_filter_thread,
+            args=(title,),
+        )
+        thread.start()
+
+    def delete_filter_thread(self, title):
+        """Delete filter thread."""
+        config = get_config()
+        if not config.api_base_url or not config.access_token:
+            return
+        print(f"Deleting filter: {title}")
+        try:
+            filters = MastodonFilters(config)
+            filters.delete(title)
+            self.load_filters()
+            self.parent.filter_editor.editor.delete("1.0", tk.END)
+            self.parent.filter_editor.editor.edit_reset()
+            print(f"Deleted filter: {title}")
+        except Exception as err:
+            error_message = extract_error_message(err)
+            messagebox.showerror("Error", error_message)

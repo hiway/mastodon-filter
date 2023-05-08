@@ -24,7 +24,7 @@ class MastodonFilterGUI(ctk.CTk):
         self.grid_columnconfigure(0, weight=0)
         self.grid_columnconfigure(1, weight=50)
         self.grid_rowconfigure(0, weight=1)
-        self.init_menu_bar()
+        # self.init_menu_bar()
         self.init_filter_editor()
         self.init_filter_list()
 

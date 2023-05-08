@@ -54,15 +54,6 @@ class FilterEditor(ctk.CTkFrame):
 
     def init_buttons(self):
         """Initialize buttons."""
-
-        # self.button_cancel = ctk.CTkButton(
-        #     self,
-        #     text="Cancel",
-        #     fg_color="#888888",
-        #     # command=self.cancel,
-        # )
-        # self.button_cancel.grid(row=2, column=0, sticky="nsew", padx=5, pady=5)
-
         self.button_save = ctk.CTkButton(
             self,
             text="Save",
@@ -103,11 +94,11 @@ class FilterEditor(ctk.CTkFrame):
         keywords_list = [kw for kw in keywords_list if kw]
 
         config = get_config()
-        if not config.api_base_url or not config.access_token:
-            return
 
         print(f"Saving filter {title} with {len(keywords_list)} keywords.")
         try:
+            if not config.api_base_url or not config.access_token:
+                raise ValueError("Instance is not configured.")
             filters = MastodonFilters(config)
             filters.sync(title=title, keywords=keywords_list)
             self.parent.filter_list.load_filters()

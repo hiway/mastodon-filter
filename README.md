@@ -2,6 +2,7 @@
 
 Manage keyword filters on Mastodon from command-line (and a simple GUI).
 
+![Screenshot of Mastodon Filter app](https://github.com/hiway/mastodon-filter/assets/23116/d5706956-aab2-45c6-99f5-99171c657c21?raw=true "Mastodon Filter")
 
 ## Installation
 
@@ -18,6 +19,27 @@ FreeBSD
 $ pkg install python39
 $ pkg install py39-tkinter
 ```
+
+#### Instance URL and Access Token
+
+Instance URL will be of the form:
+
+- https://mastodon.social
+- https://mastodon.sharma.io
+
+Create an access-token for your account by visiting:
+
+- https://INSTANCE-DOMAIN/settings/applications
+- Click on "New Application"
+- Provide a name (example: "mastodon-filter")
+- Check `read:filters`
+- Check `write:filters`
+- Copy value of "Your access token"
+
+If running CLI, see *Configure* section
+
+If running GUI, use *Instance* Menu to configure instance URL and Access Token.
+
 
 ### Try it out
 
@@ -41,34 +63,25 @@ $ mastodon-filter --help
 
 ## Usage
 
-#### Configure authentication
+### Graphical User Interface
 
-You will be asked to provide instance URL and oAuth access-token.
+```
+$ mastodon-filter
+```
 
-Instance URL will be of the form:
+### Command Line Interface
 
-- https://mastodon.social
-- https://mastodon.sharma.io
+#### Show CLI Commands
+```
+$ mastodon-filter --help
+```
 
-Create an access-token for your account by visiting:
-
-- https://INSTANCE-DOMAIN/settings/applications
-- Click on "New Application"
-- Provide a name (example: "mastodon-filter")
-- Check `read:filters`
-- Check `write:filters`
-- Copy value of "Your access token" to clipboard
+#### Configure
 
 ```
 $ mastodon-filter config
 Instance URL [https://example.social]: https://mastodon.sharma.io
 Access token []: PASTE-YOUR-ACCESS-TOKEN-HERE
-```
-
-### Run GUI
-
-```
-$ mastodon-filter
 ```
 
 #### List filter titles and keyword counts

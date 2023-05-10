@@ -19,7 +19,6 @@ class MastodonFilterGUI(ctk.CTk):
     """
 
     def __init__(self):
-        """Initialize App."""
         super().__init__()
         self.init_ui()
 

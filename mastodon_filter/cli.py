@@ -37,7 +37,8 @@ def main_newgui() -> None:
     """
     from mastodon_filter.newgui.app import MastodonFilterGUI
 
-    MastodonFilterGUI().mainloop()
+    app = MastodonFilterGUI()
+    app.mainloop()
 
 
 @main.command("config")

@@ -17,6 +17,8 @@
         "ipady",
         "maxundo",
         "newgui",
+        "offvalue",
+        "onvalue",
         "padx",
         "pady",
         "tearoff",

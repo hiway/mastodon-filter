@@ -35,6 +35,19 @@ class Context:
     thread: bool = False
     account: bool = False
 
+    @classmethod
+    def from_list(cls, context):
+        """
+        Create context from list.
+        """
+        return cls(
+            home="home" in context,
+            notifications="notifications" in context,
+            public="public" in context,
+            thread="thread" in context,
+            account="account" in context,
+        )
+
 
 @dataclass
 class Status:
@@ -54,15 +67,14 @@ class Filter:
 
     title: str
     context: Context
-    expires_at: Optional[int] = None
-    filter_action: str = "hide"
     keywords: list[Keyword]
     statuses: list[Status]
+    expires_at: Optional[int] = None
+    filter_action: str = "hide"
     id: Optional[str] = None  # pylint: disable=invalid-name
 
     def __post_init__(self):
         self.title = self.title.strip()
-        self.keywords = [Keyword(**asdict(kw)) for kw in self.keywords]
 
     def __str__(self):
         return self.title

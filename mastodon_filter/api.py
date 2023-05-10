@@ -10,7 +10,7 @@ import requests
 
 from mastodon_filter.config import Config
 from mastodon_filter.logging import get_logger
-from mastodon_filter.schema import Keyword
+from mastodon_filter.schema import Keyword, Context, Status, Filter
 from mastodon_filter.validate import (
     validate_action,
     validate_context,
@@ -78,7 +78,19 @@ class MastodonFilters:
         """
         Get filters.
         """
-        return self._call_api("get", "/api/v2/filters")
+        response = self._call_api("get", "/api/v2/filters")
+        return [
+            Filter(
+                title=filter_item["title"],
+                context=Context.from_list(filter_item["context"]),
+                keywords=[Keyword(**keyword) for keyword in filter_item["keywords"]],
+                statuses=[Status(**status) for status in filter_item["statuses"]],
+                expires_at=filter_item["expires_at"],
+                filter_action=filter_item["filter_action"],
+                id=filter_item["id"],
+            )
+            for filter_item in response
+        ]
 
     def filter(self, title: str) -> dict:
         """
@@ -89,7 +101,18 @@ class MastodonFilters:
         filters = self.filters()
         for filter_item in filters:
             if filter_item["title"] == title:
-                return filter_item
+                return Filter(
+                    title=filter_item["title"],
+                    context=Context.from_list(filter_item["context"]),
+                    keywords=[
+                        Keyword(**keyword) for keyword in filter_item["keywords"]
+                    ],
+                    statuses=[Status(**status) for status in filter_item["statuses"]],
+                    expires_at=filter_item["expires_at"],
+                    filter_action=filter_item["filter_action"],
+                    id=filter_item["id"],
+                )
+
         raise ValueError(f"Filter not found: {title}")
 
     def create(
@@ -117,7 +140,16 @@ class MastodonFilters:
             }
         )
         params.update(self._build_keyword_params(keywords))
-        return self._call_api("post", "/api/v2/filters", params=params)
+        filter_item = self._call_api("post", "/api/v2/filters", params=params)
+        return Filter(
+            title=filter_item["title"],
+            context=Context.from_list(filter_item["context"]),
+            keywords=[Keyword(**keyword) for keyword in filter_item["keywords"]],
+            statuses=[Status(**status) for status in filter_item["statuses"]],
+            expires_at=filter_item["expires_at"],
+            filter_action=filter_item["filter_action"],
+            id=filter_item["id"],
+        )
 
     def sync(self, title: str, keywords: Union[str, list[str]]) -> dict:
         """
@@ -157,9 +189,21 @@ class MastodonFilters:
         response = self._call_api(
             "put", f"/api/v2/filters/{filter_item['id']}", params=params
         )
-        response["added"] = add_keywords
-        response["deleted"] = delete_keywords
-        return response
+        # response["added"] = add_keywords
+        # response["deleted"] = delete_keywords
+        response = self._call_api("get", "/api/v2/filters")
+        return [
+            Filter(
+                title=filter_item["title"],
+                context=Context.from_list(filter_item["context"]),
+                keywords=[Keyword(**keyword) for keyword in filter_item["keywords"]],
+                statuses=[Status(**status) for status in filter_item["statuses"]],
+                expires_at=filter_item["expires_at"],
+                filter_action=filter_item["filter_action"],
+                id=filter_item["id"],
+            )
+            for filter_item in response
+        ]
 
     def delete(self, title: str) -> dict:
         """
@@ -168,7 +212,16 @@ class MastodonFilters:
         if not title:
             raise ValueError("Title must not be empty.")
         filter_item = self.filter(title)
-        return self._call_api("delete", f"/api/v2/filters/{filter_item['id']}")
+        filter_item = self._call_api("delete", f"/api/v2/filters/{filter_item['id']}")
+        return Filter(
+            title=filter_item["title"],
+            context=Context.from_list(filter_item["context"]),
+            keywords=[Keyword(**keyword) for keyword in filter_item["keywords"]],
+            statuses=[Status(**status) for status in filter_item["statuses"]],
+            expires_at=filter_item["expires_at"],
+            filter_action=filter_item["filter_action"],
+            id=filter_item["id"],
+        )
 
     def export(self, path: Path) -> dict:
         """

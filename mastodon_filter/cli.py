@@ -1,6 +1,7 @@
 """
 Command-line interface.
 """
+import logging
 from pathlib import Path
 
 import click
@@ -9,8 +10,13 @@ from click_default_group import DefaultGroup
 from mastodon_filter.api import MastodonFilters
 from mastodon_filter.config import Config, ensure_config_exists, get_config, save_config
 from mastodon_filter.errors import extract_error_message
+from mastodon_filter.logging import get_logger
 from mastodon_filter.templates import list_templates, load_template
 from mastodon_filter.validate import validate_context_string, FILTER_ACTIONS
+
+
+logger = get_logger("mastodon_filter", log_level=logging.WARNING)
+logging.getLogger("mastodon_filter.api").setLevel(logging.WARNING)
 
 
 @click.group(cls=DefaultGroup, default="gui", default_if_no_args=True)
@@ -69,10 +75,11 @@ def main_list() -> None:
     try:
         filters = MastodonFilters(config)
         for filter_item in filters.filters():
-            click.echo(f"{filter_item['title']}: {len(filter_item['keywords'])}")
+            click.echo(f"{filter_item.title}: {len(filter_item.keywords)}")
     except Exception as error:
         error_message = extract_error_message(error)
         click.echo(f"Could not list filters, got response: {error_message}")
+        raise error
 
 
 @main.command("show")

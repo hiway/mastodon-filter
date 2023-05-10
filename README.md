@@ -5,6 +5,20 @@ Manage keyword filters on Mastodon from command-line (and a simple GUI).
 
 ## Installation
 
+### Requirements
+
+macOS
+```
+$ brew install python@3.9
+$ brew install python-tk
+```
+
+FreeBSD
+```
+$ pkg install python39
+$ pkg install py39-tkinter
+```
+
 ### Try it out
 
 ```

@@ -6,6 +6,7 @@ import customtkinter as ctk
 
 from mastodon_filter.schema import Filter
 from mastodon_filter.newgui.contexts import ContextsFrame
+from mastodon_filter.newgui.filter_actions import FilterActionsFrame
 
 
 class FiltersFrame(ctk.CTkFrame):
@@ -28,17 +29,21 @@ class FiltersFrame(ctk.CTkFrame):
         self.rowconfigure(1, weight=20)
         self.rowconfigure(2, weight=1)
         self.rowconfigure(3, weight=1)
+        self.rowconfigure(4, weight=1)
         self.columnconfigure(0, weight=1)
 
         self.label = ctk.CTkLabel(self, text="Filters")
         self.label.grid(row=0, column=0, sticky="ew")
+
+        self.filter_actions_frame = FilterActionsFrame(self)
+        self.filter_actions_frame.grid(row=2, column=0, sticky="nsew", padx=15, pady=5)
 
         self.filters_list = tk.Listbox(self, bd=0)
         self.filters_list.bind("<<ListboxSelect>>", self._select_filter)
         self.filters_list.grid(row=1, column=0, sticky="nsew", padx=15, pady=5)
 
         self.contexts_frame = ContextsFrame(self)
-        self.contexts_frame.grid(row=2, column=0, sticky="nsew", padx=15, pady=5)
+        self.contexts_frame.grid(row=3, column=0, sticky="nsew", padx=15, pady=5)
 
     def _select_filter(self, event):
         """
@@ -53,6 +58,11 @@ class FiltersFrame(ctk.CTkFrame):
             self.current_filter.set(data)
             self.contexts_frame.update_context(
                 self.parent._filters[index].context  # pylint: disable=protected-access
+            )
+            self.filter_actions_frame.update_filter_action(
+                self.parent._filters[  # pylint: disable=protected-access
+                    index
+                ].filter_action
             )
         current_filter = self.current_filter.get()
         previous_filter = self.previous_filter.get()

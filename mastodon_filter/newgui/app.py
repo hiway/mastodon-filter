@@ -4,9 +4,13 @@ Mastodon Filter App.
 # pylint: disable=attribute-defined-outside-init
 import webbrowser
 import tkinter as tk
+
 import customtkinter as ctk
+from darkdetect import isDark
+
 from mastodon_filter import __version__
 from mastodon_filter.newgui.filters import FiltersFrame
+from mastodon_filter.newgui.keywords import KeywordsFrame
 
 
 class MastodonFilterGUI(ctk.CTk):
@@ -33,6 +37,26 @@ class MastodonFilterGUI(ctk.CTk):
         self.filters = FiltersFrame(self)
         self.filters.grid(row=0, column=0, sticky="nsew")
         self.filters.update_filters([f"Filter {i}" for i in range(1, 10)])
+
+        self.keywords = KeywordsFrame(self)
+        self.keywords.grid(row=0, column=1, sticky="nsew")
+
+        self.init_theme()
+
+    def init_theme(self):
+        """
+        Patch disparities between tk and ctk components.
+        """
+        if isDark():
+            self.background_color = (
+                self.keywords._bg_color  # pylint: disable=protected-access
+            )
+        else:
+            self.background_color = (
+                self.keywords._fg_color  # pylint: disable=protected-access
+            )
+            self.filters.filters_list.configure(bg=self.background_color[0])
+        self.configure(fg_color=self.background_color)
 
     def init_menu(self):
         """Initialize App Menu."""
@@ -123,8 +147,17 @@ class MastodonFilterGUI(ctk.CTk):
 
     # Filter Event Handlers
 
-    def load_filter(self, current_filter, previous_filter):
+    def load_filter(self, current_filter: str, previous_filter: str):
         """Load Filter."""
         print(f"Previous filter: {previous_filter}")
         print(f"Loading filter: {current_filter}")
+        self.keywords.load_filter(
+            current_filter, [f"{current_filter} Keyword {i}" for i in range(1, 10)]
+        )
         raise NotImplementedError("Load Filter not implemented yet.")
+
+    def save_filter(self, current_filter: str, keywords: list[str]):
+        """Save Filter."""
+        print(f"Saving filter: {current_filter}")
+        print(f"Keywords: {keywords}")
+        raise NotImplementedError("Save Filter not implemented yet.")

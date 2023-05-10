@@ -24,9 +24,9 @@ class MastodonFilterGUI(ctk.CTk):
         self.grid_columnconfigure(0, weight=0)
         self.grid_columnconfigure(1, weight=50)
         self.grid_rowconfigure(0, weight=1)
-        # self.init_menu_bar()
         self.init_filter_editor()
         self.init_filter_list()
+        self.init_menu_bar()
 
     def init_menu_bar(self):
         """Initialize the menu bar."""
@@ -38,17 +38,21 @@ class MastodonFilterGUI(ctk.CTk):
         self.file_menu.add_command(label="Exit", command=self.quit)
         self.menu_bar.add_cascade(label="File", menu=self.file_menu)
 
-        # Instance menu
-        self.instance_menu = tk.Menu(self.menu_bar, tearoff=0)
-        self.instance_menu.add_command(label="Configure")
-        self.menu_bar.add_cascade(label="Instance", menu=self.instance_menu)
+        # # Instance menu
+        # self.instance_menu = tk.Menu(self.menu_bar, tearoff=0)
+        # self.instance_menu.add_command(label="Configure")
+        # self.menu_bar.add_cascade(label="Instance", menu=self.instance_menu)
 
         # Filter menu
         self.filter_menu = tk.Menu(self.menu_bar, tearoff=0)
-        self.filter_menu.add_command(label="Create")
-        self.filter_menu.add_command(label="Use Template")
+        self.filter_menu.add_command(
+            label="Create", command=self.filter_list.create_filter
+        )
+        # self.filter_menu.add_command(label="Use Template")
         self.filter_menu.add_separator()
-        self.filter_menu.add_command(label="Delete")
+        self.filter_menu.add_command(
+            label="Delete", command=self.filter_list.delete_filter
+        )
         self.menu_bar.add_cascade(label="Filter", menu=self.filter_menu)
 
     def init_filter_list(self):

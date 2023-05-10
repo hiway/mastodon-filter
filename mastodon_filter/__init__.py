@@ -7,3 +7,5 @@ try:
     import charset_normalizer.md__mypyc as _cn_md__mypyc
 except ImportError:
     pass
+
+__version__ = "0.1.1"

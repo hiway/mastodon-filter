@@ -56,6 +56,7 @@ class MastodonFilterGUI(ctk.CTk):
                 self.keywords._fg_color  # pylint: disable=protected-access
             )
             self.filters.filters_list.configure(bg=self.background_color[0])
+            self.filters.contexts_frame.configure(fg_color=self.background_color[0])
         self.configure(fg_color=self.background_color)
 
     def init_menu(self):

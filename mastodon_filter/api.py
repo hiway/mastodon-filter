@@ -8,6 +8,7 @@ from typing import Optional, Union
 import requests
 
 from mastodon_filter.config import Config
+from mastodon_filter.logging import get_logger
 from mastodon_filter.schema import Keyword
 from mastodon_filter.validate import (
     validate_action,
@@ -16,6 +17,8 @@ from mastodon_filter.validate import (
     validate_title,
     validate_expires_in,
 )
+
+logger = get_logger(__name__)
 
 
 class MastodonFilters:
@@ -50,6 +53,11 @@ class MastodonFilters:
         """
         Call API method.
         """
+        if not self.config.api_base_url or not self.config.access_token:
+            logger.error("API base URL or access token not set.")
+            raise ValueError("API base URL or access token not set.")
+
+        logger.debug("Calling API method: %s %s with params: %s", method, path, params)
         response = requests.request(
             method=method,
             url=f"{self.config.api_base_url}{path}",
@@ -61,6 +69,7 @@ class MastodonFilters:
             params=params,
             timeout=10,
         )
+        logger.debug("Server response: %s", response.text)
         response.raise_for_status()
         return response.json()
 

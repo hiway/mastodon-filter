@@ -1,4 +1,4 @@
-# mastodon-filter
+# Mastodon Filter
 
 Manage keyword filters on Mastodon from command-line (and a simple GUI).
 

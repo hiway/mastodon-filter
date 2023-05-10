@@ -11,7 +11,10 @@ import customtkinter as ctk
 
 from mastodon_filter.api import MastodonFilters
 from mastodon_filter.config import get_config
+from mastodon_filter.logging import get_logger
 from mastodon_filter.errors import extract_error_message
+
+logger = get_logger(__name__)
 
 
 class FilterEditor(ctk.CTkFrame):
@@ -72,7 +75,9 @@ class FilterEditor(ctk.CTkFrame):
                 current_filter = filter
                 break
         else:
+            logger.error("Filter %s not found.", title)
             return
+        logger.debug("Loading filter %s.", title)
         keywords_list = [kw["keyword"] for kw in current_filter.get("keywords", [])]
         keywords = "\n".join(keywords_list)
         self.editor.delete("1.0", tk.END)
@@ -81,33 +86,38 @@ class FilterEditor(ctk.CTkFrame):
 
     def save_filter(self):
         """Save filter."""
-        self.button_save.configure(text="Saving...", state="disabled")
-        self.editor.configure(state="disabled")
-        thread = threading.Thread(target=self.save_filter_thread)
-        thread.daemon = True
-        thread.start()
-
-    def save_filter_thread(self):
-        """Save filter in background."""
         title = self.parent.filter_list.current_filter.get()
         keywords = self.editor.get("1.0", tk.END)
         keywords_list = keywords.split("\n")
         keywords_list = [kw for kw in keywords_list if kw]
 
+        self.button_save.configure(text="Saving...", state="disabled")
+        self.editor.configure(state="disabled")
+        logger.debug("Saving filter %s in background.", title)
+        thread = threading.Thread(
+            target=self.save_filter_thread, args=(title, keywords_list)
+        )
+        thread.daemon = True
+        thread.start()
+
+    def save_filter_thread(self, title: str, keywords: list):
+        """Save filter in background."""
+
         config = get_config()
 
-        print(f"Saving filter {title} with {len(keywords_list)} keywords.")
+        logger.debug("Saving filter %s with %s keywords.", title, len(keywords))
         try:
             if not config.api_base_url or not config.access_token:
                 raise ValueError("Instance is not configured.")
             filters = MastodonFilters(config)
-            filters.sync(title=title, keywords=keywords_list)
+            filters.sync(title=title, keywords=keywords)
             self.parent.filter_list.load_filters()
             self.editor.configure(state="normal")
             self.load_filter(self.cached_filters_path, title)
         except Exception as err:  # pylint: disable=broad-except
             error_message = extract_error_message(err)
             messagebox.showerror("Error", error_message)
+            logger.error(error_message)
         finally:
             self.button_save.configure(text="Save", state="normal")
-            print("Done.")
+            logger.debug("Done.")

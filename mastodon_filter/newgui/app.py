@@ -20,17 +20,17 @@ class MastodonFilterGUI(ctk.CTk):
 
     def init_menu(self):
         """Initialize App Menu."""
-        menu = tk.Menu(self)
-        self.config(menu=menu)
+        self.menu = tk.Menu(self)
+        self.config(menu=self.menu)
 
-        file_menu = tk.Menu(menu, tearoff=0)
-        file_menu.add_command(label="Exit", command=self.quit)
-        menu.add_cascade(label="File", menu=file_menu)
+        self.file_menu = tk.Menu(self.menu, tearoff=0)
+        self.file_menu.add_command(label="Exit", command=self.quit)
+        self.menu.add_cascade(label="File", menu=self.file_menu)
 
-        help_menu = tk.Menu(menu, tearoff=0)
-        help_menu.add_command(label="About", command=self.open_about_page)
-        help_menu.add_command(label="Issue Tracker", command=self.open_issues_page)
-        menu.add_cascade(label="Help", menu=help_menu)
+        self.help_menu = tk.Menu(self.menu, tearoff=0)
+        self.help_menu.add_command(label="About", command=self.open_about_page)
+        self.help_menu.add_command(label="Issue Tracker", command=self.open_issues_page)
+        self.menu.add_cascade(label="Help", menu=self.help_menu)
 
     def open_about_page(self):
         """Open About page."""

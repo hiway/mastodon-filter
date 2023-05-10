@@ -1,11 +1,18 @@
+"""
+Mastodon Filter App.
+"""
+# pylint: disable=attribute-defined-outside-init
 import webbrowser
 import tkinter as tk
 import customtkinter as ctk
 from mastodon_filter import __version__
+from mastodon_filter.newgui.filters import FiltersFrame
 
 
 class MastodonFilterGUI(ctk.CTk):
-    """MastodonFilter GUI."""
+    """
+    Mastodon Filter App.
+    """
 
     def __init__(self):
         """Initialize App."""
@@ -14,9 +21,18 @@ class MastodonFilterGUI(ctk.CTk):
 
     def init_ui(self):
         """Initialize App UI."""
-        self.geometry("800x600")
         self.title(f"Mastodon Filter v{__version__}")
+
+        self.geometry("800x600")
+        self.rowconfigure(0, weight=1)
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=20)
+
         self.init_menu()
+
+        self.filters = FiltersFrame(self)
+        self.filters.grid(row=0, column=0, sticky="nsew")
+        self.filters.update_filters([f"Filter {i}" for i in range(1, 10)])
 
     def init_menu(self):
         """Initialize App Menu."""
@@ -58,6 +74,8 @@ class MastodonFilterGUI(ctk.CTk):
         self.help_menu.add_command(label="About", command=self.open_about_page)
         self.help_menu.add_command(label="Issue Tracker", command=self.open_issues_page)
         self.menu.add_cascade(label="Help", menu=self.help_menu)
+
+    # Menu Event Handlers
 
     def import_filter(self):
         """Import Filter."""
@@ -102,3 +120,11 @@ class MastodonFilterGUI(ctk.CTk):
     def open_issues_page(self):
         """Open Issues page."""
         webbrowser.open("https://github.com/hiway/mastodon-filter/issues")
+
+    # Filter Event Handlers
+
+    def load_filter(self, current_filter, previous_filter):
+        """Load Filter."""
+        print(f"Previous filter: {previous_filter}")
+        print(f"Loading filter: {current_filter}")
+        raise NotImplementedError("Load Filter not implemented yet.")

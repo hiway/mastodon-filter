@@ -35,8 +35,12 @@ def main_newgui() -> None:
     """
     Run the new GUI.
     """
-    from mastodon_filter.newgui.app import MastodonFilterGUI
+    import customtkinter as ctk  # pylint: disable=import-outside-toplevel
+    from mastodon_filter.newgui.app import (  # pylint: disable=import-outside-toplevel
+        MastodonFilterGUI,
+    )
 
+    ctk.set_appearance_mode("System")
     app = MastodonFilterGUI()
     app.mainloop()
 

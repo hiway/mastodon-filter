@@ -2,6 +2,7 @@
 Mastodon filters API client.
 """
 import json
+from collections import OrderedDict
 from pathlib import Path
 from typing import Optional, Union
 
@@ -33,7 +34,7 @@ class MastodonFilters:
         """
         Build keyword params.
         """
-        params = {}
+        params = OrderedDict()
         for i, keyword in enumerate(keywords):
             params[f"keywords_attributes[{i}][keyword]"] = keyword.keyword
             params[f"keywords_attributes[{i}][whole_word]"] = keyword.whole_word
@@ -48,7 +49,7 @@ class MastodonFilters:
         method: str,
         path: str,
         data: Optional[dict] = None,
-        params: Optional[dict] = None,
+        params: Optional[OrderedDict] = None,
     ) -> dict:
         """
         Call API method.
@@ -107,12 +108,14 @@ class MastodonFilters:
         action = validate_action(action)
         keywords = validate_keywords(keywords)
         expires_in = validate_expires_in(expires_in)
-        params = {
-            "title": title,
-            "context[]": context,
-            "expires_in": expires_in,
-            "filter_action": action,
-        }
+        params = OrderedDict(
+            {
+                "title": title,
+                "context[]": context,
+                "expires_in": expires_in,
+                "filter_action": action,
+            }
+        )
         params.update(self._build_keyword_params(keywords))
         return self._call_api("post", "/api/v2/filters", params=params)
 
@@ -123,7 +126,6 @@ class MastodonFilters:
         title = validate_title(title)
         keywords = validate_keywords(keywords)
         filter_item = self.filter(title)
-
         remote_keywords = filter_item["keywords"]
         remote_keywords = [Keyword(**keyword) for keyword in remote_keywords]
 
@@ -140,13 +142,18 @@ class MastodonFilters:
                 keyword=keyword.keyword, id=keyword.id, delete=True
             )
             delete_keywords.append(keyword_to_delete)
-        params = {
-            "title": title,
-            "context[]": filter_item["context"],
-            "filter_action": filter_item["filter_action"],
-        }
-        params.update(self._build_keyword_params(add_keywords))
-        params.update(self._build_keyword_params(delete_keywords))
+
+        logger.debug("Add keywords: %s", add_keywords)
+        logger.debug("Delete keywords: %s", delete_keywords)
+
+        params = OrderedDict(
+            {
+                "title": title,
+                "context[]": filter_item["context"],
+                "filter_action": filter_item["filter_action"],
+            }
+        )
+        params.update(self._build_keyword_params(add_keywords + delete_keywords))
         response = self._call_api(
             "put", f"/api/v2/filters/{filter_item['id']}", params=params
         )

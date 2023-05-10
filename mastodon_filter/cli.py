@@ -79,7 +79,6 @@ def main_list() -> None:
     except Exception as error:
         error_message = extract_error_message(error)
         click.echo(f"Could not list filters, got response: {error_message}")
-        raise error
 
 
 @main.command("show")
@@ -93,11 +92,12 @@ def main_show(title: str) -> None:
     filters = MastodonFilters(config)
     try:
         filter_item = filters.filter(title)
-        for keyword in filter_item["keywords"]:
-            click.echo(keyword["keyword"])
+        for keyword in filter_item.keywords:
+            click.echo(keyword.keyword)
     except Exception as error:
         error_message = extract_error_message(error)
         click.echo(f"Could not show filter: {title}, got response: {error_message}")
+        raise error
 
 
 @main.command("create")

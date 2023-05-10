@@ -100,18 +100,8 @@ class MastodonFilters:
             raise ValueError("Title must not be empty.")
         filters = self.filters()
         for filter_item in filters:
-            if filter_item["title"] == title:
-                return Filter(
-                    title=filter_item["title"],
-                    context=Context.from_list(filter_item["context"]),
-                    keywords=[
-                        Keyword(**keyword) for keyword in filter_item["keywords"]
-                    ],
-                    statuses=[Status(**status) for status in filter_item["statuses"]],
-                    expires_at=filter_item["expires_at"],
-                    filter_action=filter_item["filter_action"],
-                    id=filter_item["id"],
-                )
+            if filter_item.title == title:
+                return filter_item
 
         raise ValueError(f"Filter not found: {title}")
 

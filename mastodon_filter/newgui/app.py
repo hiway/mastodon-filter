@@ -41,6 +41,18 @@ class MastodonFilterGUI(ctk.CTk):
         self.file_menu.add_command(label="Exit", command=self.quit)
         self.menu.add_cascade(label="File", menu=self.file_menu)
 
+        # Filter menu
+        self.filter_menu = tk.Menu(self.menu, tearoff=0)
+        self.filter_menu.add_command(label="Sync", command=self.sync_filter)
+        self.filter_menu.add_separator()
+        self.filter_menu.add_command(label="Create", command=self.create_filter)
+        self.filter_menu.add_command(
+            label="Create from Template", command=self.use_template
+        )
+        self.filter_menu.add_separator()
+        self.filter_menu.add_command(label="Delete", command=self.delete_filter)
+        self.menu.add_cascade(label="Filter", menu=self.filter_menu)
+
         # Help menu
         self.help_menu = tk.Menu(self.menu, tearoff=0)
         self.help_menu.add_command(label="About", command=self.open_about_page)
@@ -66,6 +78,22 @@ class MastodonFilterGUI(ctk.CTk):
     def open_preferences(self):
         """Open Preferences."""
         raise NotImplementedError("Preferences not implemented yet.")
+
+    def sync_filter(self):
+        """Sync Filter."""
+        raise NotImplementedError("Sync Filter not implemented yet.")
+
+    def create_filter(self):
+        """Create Filter."""
+        raise NotImplementedError("Create Filter not implemented yet.")
+
+    def use_template(self):
+        """Use Template."""
+        raise NotImplementedError("Use Template not implemented yet.")
+
+    def delete_filter(self):
+        """Delete Filter."""
+        raise NotImplementedError("Delete Filter not implemented yet.")
 
     def open_about_page(self):
         """Open About page."""

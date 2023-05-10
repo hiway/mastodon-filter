@@ -2,6 +2,7 @@
 Mastodon FilterEditor.
 """
 # pylint: disable=attribute-defined-outside-init
+import platform
 import json
 import threading
 import tkinter as tk
@@ -54,6 +55,10 @@ class FilterEditor(ctk.CTkFrame):
             autoseparators=True,
             maxundo=-1,
         )
+        if platform.system() == "Darwin":
+            self.editor.bind("<Command-Key-s>", lambda event: self.save_filter())
+        else:
+            self.editor.bind("<Control-Key-s>", lambda event: self.save_filter())
         self.editor.grid(row=1, column=0, columnspan=5, sticky="nsew", padx=5, pady=5)
 
     def init_buttons(self):

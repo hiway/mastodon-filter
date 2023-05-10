@@ -51,6 +51,9 @@ class FiltersFrame(ctk.CTkFrame):
             index = selection[0]
             data = widget.get(index)
             self.current_filter.set(data)
+            self.contexts_frame.update_context(
+                self.parent._filters[index].context  # pylint: disable=protected-access
+            )
         current_filter = self.current_filter.get()
         previous_filter = self.previous_filter.get()
         if current_filter != previous_filter:
@@ -65,3 +68,5 @@ class FiltersFrame(ctk.CTkFrame):
         self.filters_list.delete(0, tk.END)
         for filter_ in filters:
             self.filters_list.insert(tk.END, filter_.title)
+        self.filters_list.selection_set(0)
+        self.filters_list.event_generate("<<ListboxSelect>>")

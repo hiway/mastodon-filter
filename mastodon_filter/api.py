@@ -85,13 +85,18 @@ class MastodonFilters:
             Filter(
                 title=filter_item["title"],
                 context=Context.from_list(filter_item["context"]),
-                keywords=[Keyword(**keyword) for keyword in filter_item["keywords"]],
+                keywords=[
+                    Keyword(**keyword)
+                    for keyword in sorted(
+                        filter_item["keywords"], key=lambda x: x["keyword"]
+                    )
+                ],
                 statuses=[Status(**status) for status in filter_item["statuses"]],
                 expires_at=filter_item["expires_at"],
                 filter_action=filter_item["filter_action"],
                 id=filter_item["id"],
             )
-            for filter_item in response
+            for filter_item in sorted(response, key=lambda x: x["title"])
         ]
 
     def filter(self, title: str) -> dict:
@@ -136,7 +141,12 @@ class MastodonFilters:
         return Filter(
             title=filter_item["title"],
             context=Context.from_list(filter_item["context"]),
-            keywords=[Keyword(**keyword) for keyword in filter_item["keywords"]],
+            keywords=[
+                Keyword(**keyword)
+                for keyword in sorted(
+                    filter_item["keywords"], key=lambda x: x["keyword"]
+                )
+            ],
             statuses=[Status(**status) for status in filter_item["statuses"]],
             expires_at=filter_item["expires_at"],
             filter_action=filter_item["filter_action"],

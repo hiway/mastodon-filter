@@ -161,23 +161,25 @@ def main_sync(
     keywords = wordlist.read().decode("utf-8").splitlines()
     try:
         response = filters.sync(title, keywords)
-        added = len(response["added"])
-        deleted = len(response["deleted"])
-        if added == 0 and deleted == 0:
-            click.echo(f"Filter synced: {title}. No changes.")
-            return
-        if added > 0:
-            click.echo("Added:")
-            click.echo("  " + "\n  ".join(kw.keyword for kw in response["added"]))
-        if deleted > 0:
-            click.echo("Deleted:")
-            click.echo("  " + "\n  ".join([kw.keyword for kw in response["deleted"]]))
-        click.echo(
-            f"Filter synced: {title}. Added {added}, deleted {deleted} keywords."
-        )
+        click.echo(f"Filter synced: {title} with {len(keywords)} keywords.")
+        # added = len(response.added)
+        # deleted = len(response.deleted)
+        # if added == 0 and deleted == 0:
+        #     click.echo(f"Filter synced: {title}. No changes.")
+        #     return
+        # if added > 0:
+        #     click.echo("Added:")
+        #     click.echo("  " + "\n  ".join(kw.keyword for kw in response["added"]))
+        # if deleted > 0:
+        #     click.echo("Deleted:")
+        #     click.echo("  " + "\n  ".join([kw.keyword for kw in response["deleted"]]))
+        # click.echo(
+        #     f"Filter synced: {title}. Added {added}, deleted {deleted} keywords."
+        # )
     except Exception as error:
         error_message = extract_error_message(error)
         click.echo(f"Could not sync filter: {title}, got response: {error_message}")
+        raise error
 
 
 @main.command("export")

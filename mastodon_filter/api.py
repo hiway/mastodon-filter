@@ -37,11 +37,13 @@ class MastodonFilters:
         params = OrderedDict()
         for i, keyword in enumerate(keywords):
             params[f"keywords_attributes[{i}][keyword]"] = keyword.keyword
-            params[f"keywords_attributes[{i}][whole_word]"] = keyword.whole_word
+            params[f"keywords_attributes[{i}][whole_word]"] = (
+                "1" if keyword.whole_word else "0"
+            )
             if keyword.id:
                 params[f"keywords_attributes[{i}][id]"] = keyword.id
             if keyword.delete:
-                params[f"keywords_attributes[{i}][_destroy]"] = True
+                params[f"keywords_attributes[{i}][_destroy]"] = "1"
         return params
 
     def _call_api(
@@ -148,8 +150,7 @@ class MastodonFilters:
         title = validate_title(title)
         keywords = validate_keywords(keywords)
         filter_item = self.filter(title)
-        remote_keywords = filter_item["keywords"]
-        remote_keywords = [Keyword(**keyword) for keyword in remote_keywords]
+        remote_keywords = filter_item.keywords
 
         add_keywords = []
         delete_keywords = []
@@ -167,33 +168,19 @@ class MastodonFilters:
 
         logger.debug("Add keywords: %s", add_keywords)
         logger.debug("Delete keywords: %s", delete_keywords)
-
         params = OrderedDict(
             {
                 "title": title,
-                "context[]": filter_item["context"],
-                "filter_action": filter_item["filter_action"],
+                "context[]": filter_item.context.to_list(),
+                "filter_action": filter_item.filter_action,
             }
         )
         params.update(self._build_keyword_params(add_keywords + delete_keywords))
         response = self._call_api(
-            "put", f"/api/v2/filters/{filter_item['id']}", params=params
+            "put", f"/api/v2/filters/{filter_item.id}", params=params
         )
-        # response["added"] = add_keywords
-        # response["deleted"] = delete_keywords
         response = self._call_api("get", "/api/v2/filters")
-        return [
-            Filter(
-                title=filter_item["title"],
-                context=Context.from_list(filter_item["context"]),
-                keywords=[Keyword(**keyword) for keyword in filter_item["keywords"]],
-                statuses=[Status(**status) for status in filter_item["statuses"]],
-                expires_at=filter_item["expires_at"],
-                filter_action=filter_item["filter_action"],
-                id=filter_item["id"],
-            )
-            for filter_item in response
-        ]
+        return response
 
     def delete(self, title: str) -> dict:
         """
@@ -202,16 +189,8 @@ class MastodonFilters:
         if not title:
             raise ValueError("Title must not be empty.")
         filter_item = self.filter(title)
-        filter_item = self._call_api("delete", f"/api/v2/filters/{filter_item['id']}")
-        return Filter(
-            title=filter_item["title"],
-            context=Context.from_list(filter_item["context"]),
-            keywords=[Keyword(**keyword) for keyword in filter_item["keywords"]],
-            statuses=[Status(**status) for status in filter_item["statuses"]],
-            expires_at=filter_item["expires_at"],
-            filter_action=filter_item["filter_action"],
-            id=filter_item["id"],
-        )
+        filter_item = self._call_api("delete", f"/api/v2/filters/{filter_item.id}")
+        return filter_item
 
     def export(self, path: Path) -> dict:
         """

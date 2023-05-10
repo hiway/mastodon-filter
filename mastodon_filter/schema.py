@@ -48,6 +48,25 @@ class Context:
             account="account" in context,
         )
 
+    def to_list(self):
+        """
+        Create context from list.
+        """
+        return [
+            key
+            for key, value in asdict(self).items()
+            if value is True and key != "account"
+        ]
+
+    def __str__(self):
+        return ",".join(
+            [
+                key
+                for key, value in asdict(self).items()
+                if value is True and key != "account"
+            ]
+        )
+
 
 @dataclass
 class Status:

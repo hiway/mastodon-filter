@@ -46,11 +46,11 @@ class KeywordsFrame(ctk.CTkFrame):
         keywords = self.editor.get("1.0", tk.END).split("\n")
         self.parent.save_filter(self.current_filter.get(), keywords)
 
-    def load_filter(self, title, keywords):
+    def load_filter(self, title, filter_):
         """
         Update filter.
         """
         self.current_filter.set(title)
         self.editor.delete("1.0", tk.END)
-        self.editor.insert("1.0", "\n".join(keywords))
+        self.editor.insert("1.0", "\n".join([kw.keyword for kw in filter_.keywords]))
         self.editor.edit_reset()

@@ -4,6 +4,7 @@ Filters Frame
 import tkinter as tk
 import customtkinter as ctk
 
+from mastodon_filter.schema import Filter
 from mastodon_filter.newgui.contexts import ContextsFrame
 
 
@@ -62,5 +63,5 @@ class FiltersFrame(ctk.CTkFrame):
         if not filters:
             return
         self.filters_list.delete(0, tk.END)
-        for title in filters:
-            self.filters_list.insert(tk.END, title)
+        for filter_ in filters:
+            self.filters_list.insert(tk.END, filter_.title)

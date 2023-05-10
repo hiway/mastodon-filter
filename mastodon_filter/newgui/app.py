@@ -2,6 +2,7 @@
 Mastodon Filter App.
 """
 # pylint: disable=attribute-defined-outside-init
+import threading
 import webbrowser
 import tkinter as tk
 
@@ -9,9 +10,15 @@ import customtkinter as ctk
 from darkdetect import isDark
 
 from mastodon_filter import __version__
+from mastodon_filter.api import MastodonFilters
+from mastodon_filter.config import get_config
+from mastodon_filter.errors import extract_error_message
+from mastodon_filter.logging import get_logger
 from mastodon_filter.newgui.filters import FiltersFrame
 from mastodon_filter.newgui.keywords import KeywordsFrame
 from mastodon_filter.newgui.preferences import PreferencesDialog
+
+logger = get_logger(__name__)
 
 
 class MastodonFilterGUI(ctk.CTk):
@@ -36,12 +43,13 @@ class MastodonFilterGUI(ctk.CTk):
 
         self.filters = FiltersFrame(self)
         self.filters.grid(row=0, column=0, sticky="nsew")
-        self.filters.update_filters([f"Filter {i}" for i in range(1, 10)])
 
         self.keywords = KeywordsFrame(self)
         self.keywords.grid(row=0, column=1, sticky="nsew")
 
         self.init_theme()
+
+        self.load_all_filters_async()
 
     def init_theme(self):
         """
@@ -100,6 +108,11 @@ class MastodonFilterGUI(ctk.CTk):
         self.help_menu.add_command(label="Issue Tracker", command=self.open_issues_page)
         self.menu.add_cascade(label="Help", menu=self.help_menu)
 
+    def _get_filter_by_title(self, title: str):
+        for filter_ in self._filters:
+            if filter_.title == title:
+                return filter_
+
     # Menu Event Handlers
 
     def import_filter(self):
@@ -150,14 +163,37 @@ class MastodonFilterGUI(ctk.CTk):
 
     # Filter Event Handlers
 
+    def load_all_filters(self):
+        """Load All Filters."""
+        print("Loading all filters.")
+        try:
+            config = get_config()
+            if not config.api_base_url or not config.access_token:
+                return
+            api = MastodonFilters(config)
+            self._filters = api.filters()
+            self.filters.filters_list.configure(state=tk.NORMAL)
+            self.filters.update_filters(self._filters)
+        except Exception as error:  # pylint: disable=broad-except
+            message = extract_error_message(error)
+            print(f"Error loading filters: {message}")
+
+    def load_all_filters_async(self):
+        """Load All Filters Async."""
+        self.filters.filters_list.delete(0, tk.END)
+        self.filters.filters_list.insert(0, "Loading...")
+        self.filters.filters_list.configure(state=tk.DISABLED)
+
+        thread = threading.Thread(target=self.load_all_filters)
+        thread.start()
+
     def load_filter(self, current_filter: str, previous_filter: str):
         """Load Filter."""
         print(f"Previous filter: {previous_filter}")
         print(f"Loading filter: {current_filter}")
         self.keywords.load_filter(
-            current_filter, [f"{current_filter} Keyword {i}" for i in range(1, 10)]
+            current_filter, self._get_filter_by_title(current_filter)
         )
-        raise NotImplementedError("Load Filter not implemented yet.")
 
     def save_filter(self, current_filter: str, keywords: list[str]):
         """Save Filter."""

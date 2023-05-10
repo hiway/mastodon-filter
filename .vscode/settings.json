@@ -16,8 +16,10 @@
         "ipadx",
         "ipady",
         "maxundo",
+        "newgui",
         "padx",
         "pady",
+        "tearoff",
         "wordlist"
     ],
 }

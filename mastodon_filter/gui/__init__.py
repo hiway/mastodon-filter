@@ -23,7 +23,7 @@ class MastodonFilterGUI(ctk.CTk):
     def init_ui(self):
         """Initialize App UI."""
         self.geometry("800x600")
-        self.title("MastodonFilter")
+        self.title("Mastodon Filter")
         self.grid_columnconfigure(0, weight=0)
         self.grid_columnconfigure(1, weight=50)
         self.grid_rowconfigure(0, weight=1)

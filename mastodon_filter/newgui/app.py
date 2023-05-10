@@ -11,6 +11,7 @@ from darkdetect import isDark
 from mastodon_filter import __version__
 from mastodon_filter.newgui.filters import FiltersFrame
 from mastodon_filter.newgui.keywords import KeywordsFrame
+from mastodon_filter.newgui.preferences import PreferencesDialog
 
 
 class MastodonFilterGUI(ctk.CTk):
@@ -118,7 +119,9 @@ class MastodonFilterGUI(ctk.CTk):
 
     def open_preferences(self):
         """Open Preferences."""
-        raise NotImplementedError("Preferences not implemented yet.")
+        preferences_dialog = PreferencesDialog(self)
+        preferences_dialog.set_preferences("instance_url", "access_token")
+        preferences_dialog.wait_window()
 
     def sync_filter(self):
         """Sync Filter."""
@@ -160,3 +163,9 @@ class MastodonFilterGUI(ctk.CTk):
         print(f"Saving filter: {current_filter}")
         print(f"Keywords: {keywords}")
         raise NotImplementedError("Save Filter not implemented yet.")
+
+    def save_preferences(self, instance_url: str, access_token: str):
+        """Save Preferences."""
+        print(f"Instance URL: {instance_url}")
+        print(f"Access Token: {access_token}")
+        # raise NotImplementedError("Save Preferences not implemented yet.")

@@ -4,7 +4,10 @@ MastodonFilter GUI.
 # pylint: disable=attribute-defined-outside-init
 import tkinter as tk
 import customtkinter as ctk
+from tkinter import messagebox
 
+from mastodon_filter.config import get_config, save_config
+from mastodon_filter.errors import extract_error_message
 from mastodon_filter.gui.filter_list import FilterList
 from mastodon_filter.gui.filter_editor import FilterEditor
 
@@ -38,10 +41,15 @@ class MastodonFilterGUI(ctk.CTk):
         self.file_menu.add_command(label="Exit", command=self.quit)
         self.menu_bar.add_cascade(label="File", menu=self.file_menu)
 
-        # # Instance menu
-        # self.instance_menu = tk.Menu(self.menu_bar, tearoff=0)
-        # self.instance_menu.add_command(label="Configure")
-        # self.menu_bar.add_cascade(label="Instance", menu=self.instance_menu)
+        # Instance menu
+        self.instance_menu = tk.Menu(self.menu_bar, tearoff=0)
+        self.instance_menu.add_command(
+            label="Configure URL", command=self.config_instance_url
+        )
+        self.instance_menu.add_command(
+            label="Configure Access Token", command=self.config_instance_access_token
+        )
+        self.menu_bar.add_cascade(label="Instance", menu=self.instance_menu)
 
         # Filter menu
         self.filter_menu = tk.Menu(self.menu_bar, tearoff=0)
@@ -62,6 +70,40 @@ class MastodonFilterGUI(ctk.CTk):
     def init_filter_editor(self):
         """Initialize the filter editor."""
         self.filter_editor = FilterEditor(self)
+
+    def config_instance_url(self):
+        """Configure the instance URL and token."""
+        config = get_config()
+        instance_url = tk.simpledialog.askstring(
+            "Configure Instance URL",
+            "Enter the instance URL:",
+            initialvalue=config.api_base_url,
+        )
+        if not instance_url:
+            return
+        config.api_base_url = instance_url
+        save_config(config)
+
+        if not config.access_token:
+            self.config_instance_access_token()
+
+    def config_instance_access_token(self):
+        """Configure the instance URL and token."""
+        config = get_config()
+        access_token = tk.simpledialog.askstring(
+            "Configure Access Token",
+            "Enter the access token:",
+            initialvalue=config.access_token,
+        )
+        if not access_token:
+            return
+        config.access_token = access_token
+        save_config(config)
+
+        if not config.api_base_url:
+            self.config_instance_url()
+
+        self.filter_list.load_filters()
 
 
 def run_gui():

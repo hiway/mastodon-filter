@@ -12,7 +12,10 @@ from darkdetect import isDark
 
 from mastodon_filter.api import MastodonFilters
 from mastodon_filter.config import APP_DIR, get_config
+from mastodon_filter.logging import get_logger
 from mastodon_filter.errors import extract_error_message
+
+logger = get_logger(__name__)
 
 
 class FilterList(ctk.CTkFrame):
@@ -93,10 +96,11 @@ class FilterList(ctk.CTkFrame):
         selection = widget.curselection()
         try:
             title = widget.get(selection[0])
+            logger.debug("Filter selected: %s", title)
             self.current_filter.set(title)
             self.parent.filter_editor.load_filter(self.cached_filters_path, title)
         except IndexError:
-            pass
+            logger.debug("No filter selected")
 
     def create_filter(self):
         """Create filter."""
@@ -152,9 +156,9 @@ class FilterList(ctk.CTkFrame):
         title = self.current_filter.get()
         if not title:
             return
-        # disable delete button and filters listbox
         self.button_delete.configure(state="disabled")
         self.filters.configure(state="disabled")
+        logger.info("Starting background task to delete filter: %s ", title)
         thread = threading.Thread(
             target=self.delete_filter_thread,
             args=(title,),
@@ -166,7 +170,7 @@ class FilterList(ctk.CTkFrame):
         config = get_config()
         if not config.api_base_url or not config.access_token:
             return
-        print(f"Deleting filter: {title}")
+        logger.info("Deleting filter: %s", title)
         try:
             filters = MastodonFilters(config)
             filters.delete(title)
@@ -174,7 +178,7 @@ class FilterList(ctk.CTkFrame):
             self.load_filters()
             self.parent.filter_editor.editor.delete("1.0", tk.END)
             self.parent.filter_editor.editor.edit_reset()
-            print(f"Deleted filter: {title}")
+            logger.info("Deleted filter: %s", title)
         except Exception as err:  # pylint: disable=broad-except
             error_message = extract_error_message(err)
             messagebox.showerror("Error", error_message)

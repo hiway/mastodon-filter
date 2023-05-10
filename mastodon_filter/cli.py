@@ -97,7 +97,6 @@ def main_show(title: str) -> None:
     except Exception as error:
         error_message = extract_error_message(error)
         click.echo(f"Could not show filter: {title}, got response: {error_message}")
-        raise error
 
 
 @main.command("create")
@@ -130,7 +129,7 @@ def main_create(
     keywords = wordlist.read().decode("utf-8").splitlines()
     try:
         for filter_item in filters.filters():
-            if filter_item["title"] == title:
+            if filter_item.title == title:
                 raise ValueError(f"Filter already exists: {title}")
 
         response = filters.create(
@@ -140,9 +139,7 @@ def main_create(
             keywords=keywords,
             expires_in=expires_in,
         )
-        click.echo(
-            f"Filter created: {response['title']} with {len(keywords)} keywords."
-        )
+        click.echo(f"Filter created: {response.title} with {len(keywords)} keywords.")
     except Exception as error:
         error_message = extract_error_message(error)
         click.echo(f"Could not create filter: {title}, got response: {error_message}")

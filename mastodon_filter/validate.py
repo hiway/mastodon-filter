@@ -55,8 +55,6 @@ def validate_keywords(keywords: Union[str, list[str]]) -> list[Keyword]:
     for keyword in set(keywords):
         if not keyword:
             continue
-        if keyword.startswith("#"):
-            continue
         valid_keywords.append(Keyword(keyword))
     return valid_keywords
 

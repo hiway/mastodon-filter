@@ -30,6 +30,16 @@ def main_gui() -> None:
     run_gui()
 
 
+@main.command("newgui")
+def main_newgui() -> None:
+    """
+    Run the new GUI.
+    """
+    from mastodon_filter.newgui.app import MastodonFilterGUI
+
+    MastodonFilterGUI().mainloop()
+
+
 @main.command("config")
 def main_config() -> None:
     """

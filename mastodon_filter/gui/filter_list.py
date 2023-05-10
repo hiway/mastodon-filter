@@ -175,7 +175,7 @@ class FilterList(ctk.CTkFrame):
             self.parent.filter_editor.editor.delete("1.0", tk.END)
             self.parent.filter_editor.editor.edit_reset()
             print(f"Deleted filter: {title}")
-        except Exception as err:
+        except Exception as err:  # pylint: disable=broad-except
             error_message = extract_error_message(err)
             messagebox.showerror("Error", error_message)
         finally:

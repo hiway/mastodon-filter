@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mastodon-filter"
-version = "0.1.0"
+version = "0.1.1"
 description = "Manage keyword filters on Mastodon from command-line."
 authors = ["Harshad Sharma <harshad@sharma.io>"]
 license = "MIT"

@@ -172,7 +172,7 @@ def main_export(path) -> None:
     config = get_config()
     filters = MastodonFilters(config)
     path.parent.mkdir(parents=True, exist_ok=True)
-    filters.cache(path)
+    filters.export(path)
 
 
 @main.command("delete")
